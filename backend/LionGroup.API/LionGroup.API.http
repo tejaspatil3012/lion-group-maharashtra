@@ -1,0 +1,6 @@
+@LionGroup.API_HostAddress = http://localhost:5128
+
+GET {{LionGroup.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
