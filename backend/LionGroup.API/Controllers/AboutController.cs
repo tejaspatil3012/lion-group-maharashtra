@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using LionGroup.API.DTOs.About;
-using LionGroup.API.DTOs.Common;
 using LionGroup.API.Interfaces;
 
 namespace LionGroup.API.Controllers;
@@ -17,10 +15,9 @@ public class AboutController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(ApiResponse<AboutDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAboutData()
+    public async Task<IActionResult> GetAbout()
     {
         var data = await _aboutService.GetAboutDataAsync();
-        return Ok(ApiResponse<AboutDto>.Ok(data, "About data retrieved successfully"));
+        return Ok(data);
     }
 }

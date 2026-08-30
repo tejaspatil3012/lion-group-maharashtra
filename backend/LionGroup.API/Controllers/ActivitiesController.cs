@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using LionGroup.API.DTOs.Activities;
-using LionGroup.API.DTOs.Common;
 using LionGroup.API.Interfaces;
 
 namespace LionGroup.API.Controllers;
@@ -17,31 +15,27 @@ public class ActivitiesController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(ApiResponse<List<ActivityDto>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetActivities([FromQuery] string? category, [FromQuery] string? district, [FromQuery] string? search)
+    public async Task<IActionResult> GetActivities(string? category, string? district, string? search)
     {
         var activities = await _activityService.GetActivitiesAsync(category, district, search);
-        return Ok(ApiResponse<List<ActivityDto>>.Ok(activities, "Activities retrieved successfully"));
+        return Ok(activities);
     }
 
     [HttpGet("featured")]
-    [ProducesResponseType(typeof(ApiResponse<List<ActivityDto>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetFeatured([FromQuery] int count = 3)
+    public async Task<IActionResult> GetFeatured(int count = 3)
     {
         var featured = await _activityService.GetFeaturedActivitiesAsync(count);
-        return Ok(ApiResponse<List<ActivityDto>>.Ok(featured, "Featured activities retrieved successfully"));
+        return Ok(featured);
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(ApiResponse<ActivityDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ApiResponse<ActivityDto>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetActivityById(int id)
     {
         var activity = await _activityService.GetActivityByIdAsync(id);
         if (activity == null)
         {
-            return NotFound(ApiResponse<ActivityDto>.Fail($"Activity with ID {id} not found"));
+            return NotFound(new { message = $"Activity with ID {id} not found" });
         }
-        return Ok(ApiResponse<ActivityDto>.Ok(activity, "Activity retrieved successfully"));
+        return Ok(activity);
     }
 }
