@@ -27,11 +27,11 @@ public static class DbInitializer
             VisionMarathi = "महाराष्ट्रातील सर्व ३६ जिल्ह्यांमध्ये आरोग्य, शिक्षण, पर्यावरण संतुलन आणि वेळेवर मानवतावादी मदत पोहोचवून एका सक्षम, सुदृढ आणि संवेदनशील समाजाची निर्मिती करणे.",
             AboutHistoryEnglish = "Founded with a sacred pledge to serve humanity, Lion Group Maharashtra Rajya has grown into a premier state-wide social service organization. With thousands of dedicated volunteers and active branches across Western Maharashtra, Marathwada, Vidarbha, Konkan, and Khandesh, the organization relentlessly works for societal welfare, youth guidance, and grassroots development.",
             AboutHistoryMarathi = "मानवतेची अविरत सेवा करण्याच्या पवित्र ध्येयाने स्थापन झालेली 'लायन ग्रुप महाराष्ट्र राज्य' ही आज राज्यभरातील अग्रगण्य सामाजिक संस्था बनली आहे. पश्चिम महाराष्ट्र, मराठवाडा, विदर्भ, कोकण आणि खान्देशमधील हजारो निष्ठावंत कार्यकर्ते व पदाधिकाऱ्यांच्या साथीने ही संघटना अविरतपणे लोककल्याण, युवक मार्गदर्शन आणि तळागाळातील समाजविकासासाठी कार्यरत आहे.",
-            PresidentNameEnglish = "Shri. Chandrakant (Dada) Patil",
-            PresidentNameMarathi = "श्री. चंद्रकांत (दादा) पाटील",
+            PresidentNameEnglish = "Pailwan Tejas Bhau Chaudhari(KING)",
+            PresidentNameMarathi = "पैलवान तेजस भाऊ चौधरी(किंग)",
             PresidentMessageEnglish = "Welcome to Lion Group Maharashtra Rajya. Our organization stands firmly on the pillars of selfless dedication, integrity, and collective action. Every blood unit donated, every sapling planted, and every family supported during crises brings us closer to a prosperous and healthy Maharashtra. I invite all citizens, especially our vibrant youth, to join hands in this noble journey of social transformation.",
             PresidentMessageMarathi = "लायन ग्रुप महाराष्ट्र राज्याच्या अधिकृत संकेतस्थळावर आपले सहर्ष स्वागत! आमची संस्था निस्वार्थ सेवा, एकता आणि सामाजिक बांधिलकी या मूल्यांवर ठामपणे उभी आहे. आम्ही केलेले प्रत्येक रक्तदान, लावलेले प्रत्येक झाड आणि संकटाच्या काळात दिलेला प्रत्येक मदतीचा हात आपल्याला एका सुदृढ आणि समृद्ध महाराष्ट्राच्या दिशेने घेऊन जातो. सामाजिक परिवर्तनाच्या या पवित्र कार्यात महाराष्ट्रातील सर्व नागरिक आणि विशेषतः युवा शक्तीने सहभागी व्हावे, हेच माझे मनोगत आहे.",
-            PresidentPhotoUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+            PresidentPhotoUrl = "/uploads/king.jpeg",
             PrimaryPhone = "+91 98220 12345",
             EmergencyBloodHelpline = "+91 98220 99999",
             PrimaryEmail = "contact@liongroupmaharashtra.org",
@@ -49,41 +49,59 @@ public static class DbInitializer
         {
             new() { NameEnglish = "State President", NameMarathi = "महाराष्ट्र राज्य अध्यक्ष", DisplayOrder = 1, IsCoreLeader = true },
             new() { NameEnglish = "State Vice President", NameMarathi = "महाराष्ट्र राज्य उपाध्यक्ष", DisplayOrder = 2, IsCoreLeader = true },
-            new() { NameEnglish = "State General Secretary", NameMarathi = "महाराष्ट्र राज्य सरचिटणीस", DisplayOrder = 3, IsCoreLeader = true },
-            new() { NameEnglish = "State Treasurer", NameMarathi = "महाराष्ट्र राज्य खजिनदार", DisplayOrder = 4, IsCoreLeader = true },
-            new() { NameEnglish = "State Youth President", NameMarathi = "राज्य युवक अध्यक्ष", DisplayOrder = 5, IsCoreLeader = true },
-            new() { NameEnglish = "State Women Wing Chief", NameMarathi = "राज्य महिला आघाडी प्रमुख", DisplayOrder = 6, IsCoreLeader = true },
-            new() { NameEnglish = "District President", NameMarathi = "जिल्हाध्यक्ष", DisplayOrder = 7, IsCoreLeader = false },
-            new() { NameEnglish = "District Secretary", NameMarathi = "जिल्हा सचिव", DisplayOrder = 8, IsCoreLeader = false },
-            new() { NameEnglish = "Executive Committee Member", NameMarathi = "राज्य कार्यकारणी सदस्य", DisplayOrder = 9, IsCoreLeader = false },
-            new() { NameEnglish = "Active Member", NameMarathi = "सक्रिय सदस्य", DisplayOrder = 10, IsCoreLeader = false }
+            new() { NameEnglish = "Lion Khasdar", NameMarathi = "लायन खासदार", DisplayOrder = 3, IsCoreLeader = true },
+            new() { NameEnglish = "Plot Area President", NameMarathi = "प्लॉट एरिया अध्यक्ष", DisplayOrder = 4, IsCoreLeader = true },
+            new() { NameEnglish = "Senior Member", NameMarathi = "ज्येष्ठ सदस्य", DisplayOrder = 5, IsCoreLeader = true },
+            new() { NameEnglish = "Adiwasi Samaj President", NameMarathi = "आदिवासी समाज अध्यक्ष", DisplayOrder = 6, IsCoreLeader = true },
+            new() { NameEnglish = "Active Member", NameMarathi = "सक्रिय सदस्य", DisplayOrder = 7, IsCoreLeader = false },
+            new() { NameEnglish = "OG Member", NameMarathi = "ओजी सदस्य", DisplayOrder = 8, IsCoreLeader = true },
+             new() { NameEnglish = "Mumbai President", NameMarathi = "मुंबई अध्यक्ष", DisplayOrder = 9, IsCoreLeader = true }
         };
         await context.Designations.AddRangeAsync(designations);
         await context.SaveChangesAsync();
 
         // 3. Seed Members
-        var dPresident = designations.First(d => d.NameEnglish == "State President").Id;
-        var dVP = designations.First(d => d.NameEnglish == "State Vice President").Id;
-        var dSec = designations.First(d => d.NameEnglish == "State General Secretary").Id;
-        var dTreasurer = designations.First(d => d.NameEnglish == "State Treasurer").Id;
-        var dYouth = designations.First(d => d.NameEnglish == "State Youth President").Id;
-        var dWomen = designations.First(d => d.NameEnglish == "State Women Wing Chief").Id;
-        var dDist = designations.First(d => d.NameEnglish == "District President").Id;
-        var dExec = designations.First(d => d.NameEnglish == "Executive Committee Member").Id;
+        var dPresident = designations
+            .First(d => d.NameEnglish == "State President").Id;
+
+        var dVP = designations
+            .First(d => d.NameEnglish == "State Vice President").Id;
+
+        var dLionKhasdar = designations
+            .First(d => d.NameEnglish == "Lion Khasdar").Id;
+
+        var dPlotAreaPresident = designations
+            .First(d => d.NameEnglish == "Plot Area President").Id;
+
+        var dSeniorMember = designations
+            .First(d => d.NameEnglish == "Senior Member").Id;
+
+        var dActiveMember = designations
+            .First(d => d.NameEnglish == "Active Member").Id;
+
+        var dAdiwasiPresident = designations
+            .First(d => d.NameEnglish == "Adiwasi Samaj President").Id;
+
+        var dOGMember = designations
+            .First(d => d.NameEnglish == "OG Member").Id;
+           
+        var dMumbaiPresident = designations
+            .First(d => d.NameEnglish == "Mumbai President").Id;
+
 
         var members = new List<Member>
         {
             new()
             {
-                FullNameEnglish = "Shri. Chandrakant (Dada) Patil",
-                FullNameMarathi = "श्री. चंद्रकांत (दादा) पाटील",
+                FullNameEnglish = "Pailwan Tejas Bhau Chaudhari(KING)",
+                FullNameMarathi = "पैलवान तेजस भाऊ चौधरी(किंग)",
                 DesignationId = dPresident,
                 MobileNumber = "+91 98220 12345",
                 Email = "president@liongroupmaharashtra.org",
                 District = "Pune",
-                Taluka = "Haveli",
+                Taluka = "Pune",
                 VillageOrCity = "Pune",
-                PhotoUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80",
+                PhotoUrl = "/uploads/king.jpeg",
                 DisplayOrder = 1,
                 IsCoreLeader = true,
                 IsActive = true,
@@ -91,15 +109,15 @@ public static class DbInitializer
             },
             new()
             {
-                FullNameEnglish = "Shri. Vijayrao Shinde",
-                FullNameMarathi = "श्री. विजयराव शिंदे",
+                FullNameEnglish = "Army Lover Bhushan Bhau Chaudhari",
+                FullNameMarathi = "आर्मी लव्हर भूषण भाऊ चौधरी",
                 DesignationId = dVP,
                 MobileNumber = "+91 98221 23456",
                 Email = "vp@liongroupmaharashtra.org",
-                District = "Chhatrapati Sambhajinagar",
-                Taluka = "Aurangabad",
-                VillageOrCity = "Chhatrapati Sambhajinagar",
-                PhotoUrl = "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80",
+                District = "Jalgaon",
+                Taluka = "Yawal",
+                VillageOrCity = "Kingaon",
+                PhotoUrl = "/uploads/bhushan2.jpeg",
                 DisplayOrder = 2,
                 IsCoreLeader = true,
                 IsActive = true,
@@ -107,15 +125,15 @@ public static class DbInitializer
             },
             new()
             {
-                FullNameEnglish = "Adv. Rajesh K. Deshmukh",
-                FullNameMarathi = "ॲड. राजेश के. देशमुख",
-                DesignationId = dSec,
+                FullNameEnglish = "Rohit (Dada) Chaudhari",
+                FullNameMarathi = "रोहित (दादा) चौधरी",
+                DesignationId = dLionKhasdar,
                 MobileNumber = "+91 98222 34567",
-                Email = "secretary@liongroupmaharashtra.org",
-                District = "Nagpur",
-                Taluka = "Nagpur Urban",
-                VillageOrCity = "Nagpur",
-                PhotoUrl = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=500&q=80",
+                Email = "rohitdata@liongroupmaharashtra.org",
+                District = "All India",
+                Taluka = "All India",
+                VillageOrCity = "All India",
+                PhotoUrl = "/uploads/dada.jpeg",
                 DisplayOrder = 3,
                 IsCoreLeader = true,
                 IsActive = true,
@@ -123,15 +141,15 @@ public static class DbInitializer
             },
             new()
             {
-                FullNameEnglish = "Shri. Sanjay B. Jagtap",
-                FullNameMarathi = "श्री. संजय बी. जगताप",
-                DesignationId = dTreasurer,
+                FullNameEnglish = "Bhavesh Bhau Chaudhari (Right Hand)",
+                FullNameMarathi = "भावेश भाऊ चौधरी (राईट हँड)",
+                DesignationId = dActiveMember,
                 MobileNumber = "+91 98223 45678",
-                Email = "treasurer@liongroupmaharashtra.org",
-                District = "Kolhapur",
-                Taluka = "Karvir",
-                VillageOrCity = "Kolhapur",
-                PhotoUrl = "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=500&q=80",
+                Email = "bhaveshbhau@liongroupmaharashtra.org",
+                District = "Jalgaon",
+                Taluka = "Yawal",
+                VillageOrCity = "Kingaon",
+                PhotoUrl = "/uploads/bhavesh.jpeg",
                 DisplayOrder = 4,
                 IsCoreLeader = true,
                 IsActive = true,
@@ -139,15 +157,15 @@ public static class DbInitializer
             },
             new()
             {
-                FullNameEnglish = "Shri. Prathamesh S. Bhosale",
-                FullNameMarathi = "श्री. प्रथमेश एस. भोसले",
-                DesignationId = dYouth,
+                FullNameEnglish = "Darshan Bhau Chaudhari",
+                FullNameMarathi = "दर्शन भाऊ चौधरी",
+                DesignationId = dOGMember,
                 MobileNumber = "+91 98224 56789",
-                Email = "youth@liongroupmaharashtra.org",
-                District = "Satara",
-                Taluka = "Satara",
-                VillageOrCity = "Satara",
-                PhotoUrl = "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=500&q=80",
+                Email = "darshanog@liongroupmaharashtra.org",
+                District = "Jalgaon",
+                Taluka = "Jalgaon",
+                VillageOrCity = "Bhusawal",
+                PhotoUrl = "",
                 DisplayOrder = 5,
                 IsCoreLeader = true,
                 IsActive = true,
@@ -155,15 +173,15 @@ public static class DbInitializer
             },
             new()
             {
-                FullNameEnglish = "Smt. Sunita Tai More",
-                FullNameMarathi = "श्रीमती सुनिताताई मोरे",
-                DesignationId = dWomen,
+                FullNameEnglish = "Nishant Bhau Chaudhari",
+                FullNameMarathi = "निशांत भाऊ चौधरी",
+                DesignationId = dAdiwasiPresident,
                 MobileNumber = "+91 98225 67890",
-                Email = "women@liongroupmaharashtra.org",
-                District = "Nashik",
-                Taluka = "Nashik",
-                VillageOrCity = "Nashik",
-                PhotoUrl = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80",
+                Email = "adivasisamajnishu@liongroupmaharashtra.org",
+                District = "Jalgaon",
+                Taluka = "Jalgaon",
+                VillageOrCity = "Kingaon Area",
+                PhotoUrl = "/uploads/nishu.jpeg",
                 DisplayOrder = 6,
                 IsCoreLeader = true,
                 IsActive = true,
@@ -171,65 +189,65 @@ public static class DbInitializer
             },
             new()
             {
-                FullNameEnglish = "Shri. Ganesh R. Kulkarni",
-                FullNameMarathi = "श्री. गणेश आर. कुलकर्णी",
-                DesignationId = dDist,
+                FullNameEnglish = "Pranay Bhau Chaudhari",
+                FullNameMarathi = "प्रणय भाऊ चौधरी",
+                DesignationId = dSeniorMember,
                 MobileNumber = "+91 98226 78901",
-                Email = "nashik@liongroupmaharashtra.org",
-                District = "Nashik",
-                Taluka = "Nashik",
-                VillageOrCity = "Nashik",
-                PhotoUrl = "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=500&q=80",
+                Email = "pranaybhau@liongroupmaharashtra.org",
+                District = "Jalgaon",
+                Taluka = "Jalgaon",
+                VillageOrCity = "Jalgaon",
+                PhotoUrl = "/uploads/pranay.jpeg",
                 DisplayOrder = 7,
-                IsCoreLeader = false,
+                IsCoreLeader = true,
                 IsActive = true,
                 JoinedDate = new DateTime(2021, 4, 10)
             },
             new()
             {
-                FullNameEnglish = "Shri. Nitin P. Gaikwad",
-                FullNameMarathi = "श्री. नितीन पी. गायकवाड",
-                DesignationId = dDist,
+                FullNameEnglish = "Girish Bhau Chaudhari",
+                FullNameMarathi = "गिरीश भाऊ चौधरी",
+                DesignationId = dAdiwasiPresident,
                 MobileNumber = "+91 98227 89012",
-                Email = "thane@liongroupmaharashtra.org",
-                District = "Thane",
-                Taluka = "Thane",
-                VillageOrCity = "Thane",
-                PhotoUrl = "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=500&q=80",
+                Email = "girishadiwasi@liongroupmaharashtra.org",
+                District = "Pune",
+                Taluka = "Pune",
+                VillageOrCity = "Pune",
+                PhotoUrl = "",
                 DisplayOrder = 8,
-                IsCoreLeader = false,
+                IsCoreLeader = true,
                 IsActive = true,
                 JoinedDate = new DateTime(2021, 6, 25)
             },
             new()
             {
-                FullNameEnglish = "Dr. Mahesh S. Joshi",
-                FullNameMarathi = "डॉ. महेश एस. जोशी",
-                DesignationId = dExec,
+                FullNameEnglish = "Dadu Bhau Dhangar",
+                FullNameMarathi = "दादू भाऊ धनगर",
+                DesignationId = dPlotAreaPresident,
                 MobileNumber = "+91 98228 90123",
-                Email = "mjoshi@liongroupmaharashtra.org",
-                District = "Solapur",
-                Taluka = "Solapur North",
-                VillageOrCity = "Solapur",
-                PhotoUrl = "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80",
+                Email = "dadubhau@liongroupmaharashtra.org",
+                District = "Jalgaon",
+                Taluka = "jalgaon",
+                VillageOrCity = "kingaon",
+                PhotoUrl = "",
                 DisplayOrder = 9,
-                IsCoreLeader = false,
+                IsCoreLeader = true,
                 IsActive = true,
                 JoinedDate = new DateTime(2022, 1, 10)
             },
             new()
             {
-                FullNameEnglish = "Shri. Amol V. Jadhav",
-                FullNameMarathi = "श्री. अमोल व्ही. जाधव",
-                DesignationId = dExec,
+                FullNameEnglish = "Sanket Bhau Chaudhari",
+                FullNameMarathi = "संकेत भाऊ चौधरी",
+                DesignationId = dMumbaiPresident,
                 MobileNumber = "+91 98229 01234",
-                Email = "ajadhav@liongroupmaharashtra.org",
-                District = "Ahmednagar",
-                Taluka = "Nagar",
-                VillageOrCity = "Ahmednagar",
-                PhotoUrl = "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=500&q=80",
+                Email = "sanketbhau@liongroupmaharashtra.org",
+                District = "Thane",
+                Taluka = "Thane",
+                VillageOrCity = "Mumbai",
+                PhotoUrl = "/uploads/sanket.jpeg",
                 DisplayOrder = 10,
-                IsCoreLeader = false,
+                IsCoreLeader = true,
                 IsActive = true,
                 JoinedDate = new DateTime(2022, 5, 18)
             }

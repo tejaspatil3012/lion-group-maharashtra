@@ -4,5 +4,6 @@ namespace LionGroup.API.Interfaces;
 
 public interface IAboutService
 {
-    Task<AboutDto> GetAboutDataAsync();
+    Task<AboutDto?> GetAboutDataAsync();
+    Task<AboutDto> UpdateAboutDataAsync(UpdateAboutDto dto);
 }

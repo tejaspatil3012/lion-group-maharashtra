@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using LionGroup.API.DTOs.About;
 using LionGroup.API.Interfaces;
 
 namespace LionGroup.API.Controllers;
@@ -19,5 +20,14 @@ public class AboutController : ControllerBase
     {
         var data = await _aboutService.GetAboutDataAsync();
         return Ok(data);
+    }
+
+    // Admin Update Endpoint
+    [HttpPut]
+    public async Task<IActionResult> UpdateAbout([FromBody] UpdateAboutDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var updated = await _aboutService.UpdateAboutDataAsync(dto);
+        return Ok(updated);
     }
 }

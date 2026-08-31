@@ -183,8 +183,8 @@ export const Footer = () => {
                 <MapPin size={18} color="var(--primary-gold)" style={{ flexShrink: 0, marginTop: "0.2rem" }} />
                 <span style={{ color: "var(--text-light-muted)", lineHeight: 1.5 }}>
                   {lang === "mr"
-                    ? "लायन ग्रुप राज्य मुख्य कार्यालय, शिवाजीनगर, पुणे - ४११००५, महाराष्ट्र"
-                    : "Lion Group State HQ, Shivajinagar, Pune - 411005, Maharashtra"}
+                    ? "लायन ग्रुप राज्य मुख्य कार्यालय, चौधरी वाडा,किनगाव, ता. यावल, जि. जळगाव"
+                    : "Lion Group HQ Chaudhari wada Kingaon, Maharashtra"}
                 </span>
               </div>
 
@@ -238,7 +238,10 @@ export const Footer = () => {
           color: "var(--text-light-muted)"
         }}>
           <div>{t.footer.copyright}</div>
-          <div style={{ display: "flex", gap: "1.5rem" }}>
+          <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+            <Link to="/admin" style={{ color: "var(--primary-gold)", textDecoration: "none", fontSize: "0.8rem", opacity: 0.85 }}>
+              ⚙️ {lang === "mr" ? "व्यवस्थापक पोर्टल (Admin Portal)" : "Admin Portal"}
+            </Link>
             <span style={{ color: "var(--primary-gold)" }}>🚩 जय महाराष्ट्र | जय हिंद 🇮🇳</span>
           </div>
         </div>

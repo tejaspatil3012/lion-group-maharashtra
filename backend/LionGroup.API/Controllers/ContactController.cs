@@ -25,12 +25,24 @@ public class ContactController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> SubmitInquiry([FromBody] CreateInquiryDto dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         await _contactService.SubmitInquiryAsync(dto);
         return Ok(new { message = "Your message has been received successfully!" });
+    }
+
+    // Admin Inquiries Management
+    [HttpGet("inquiries")]
+    public async Task<IActionResult> GetAllInquiries()
+    {
+        var inquiries = await _contactService.GetAllInquiriesAsync();
+        return Ok(inquiries);
+    }
+
+    [HttpDelete("inquiries/{id:int}")]
+    public async Task<IActionResult> DeleteInquiry(int id)
+    {
+        var deleted = await _contactService.DeleteInquiryAsync(id);
+        if (!deleted) return NotFound(new { message = $"Inquiry with ID {id} not found" });
+        return Ok(new { message = "Inquiry deleted successfully" });
     }
 }

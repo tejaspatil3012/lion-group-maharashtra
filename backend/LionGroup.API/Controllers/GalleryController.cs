@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using LionGroup.API.DTOs.Gallery;
 using LionGroup.API.Interfaces;
 
 namespace LionGroup.API.Controllers;
@@ -37,5 +38,48 @@ public class GalleryController : ControllerBase
     {
         var images = await _galleryService.GetRecentImagesAsync(count);
         return Ok(images);
+    }
+
+    // Admin CRUD Endpoints
+    [HttpPost]
+    public async Task<IActionResult> CreateAlbum([FromBody] CreateAlbumDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var created = await _galleryService.CreateAlbumAsync(dto);
+        return CreatedAtAction(nameof(GetAlbumById), new { id = created.Id }, created);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateAlbum(int id, [FromBody] UpdateAlbumDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var updated = await _galleryService.UpdateAlbumAsync(id, dto);
+        if (updated == null) return NotFound(new { message = $"Album with ID {id} not found" });
+        return Ok(updated);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteAlbum(int id)
+    {
+        var deleted = await _galleryService.DeleteAlbumAsync(id);
+        if (!deleted) return NotFound(new { message = $"Album with ID {id} not found" });
+        return Ok(new { message = "Album deleted successfully" });
+    }
+
+    [HttpPost("{id:int}/images")]
+    public async Task<IActionResult> AddImageToAlbum(int id, [FromBody] AddGalleryImageDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var image = await _galleryService.AddImageToAlbumAsync(id, dto);
+        if (image == null) return NotFound(new { message = $"Album with ID {id} not found" });
+        return Ok(image);
+    }
+
+    [HttpDelete("images/{imageId:int}")]
+    public async Task<IActionResult> DeleteImage(int imageId)
+    {
+        var deleted = await _galleryService.DeleteImageAsync(imageId);
+        if (!deleted) return NotFound(new { message = $"Image with ID {imageId} not found" });
+        return Ok(new { message = "Image deleted successfully" });
     }
 }
