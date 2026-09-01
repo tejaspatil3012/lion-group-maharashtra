@@ -1,0 +1,60 @@
+services:
+  # ──────────────────────────────────────────
+  # SQL Server Database
+  # ──────────────────────────────────────────
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: liongroup-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "LionGroup@2026!"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P "LionGroup@2026!" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  # ──────────────────────────────────────────
+  # .NET 10 Backend API
+  # ──────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend/LionGroup.API
+      dockerfile: Dockerfile
+    container_name: liongroup-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ConnectionStrings__DefaultConnection: "Server=db;Database=LionGroupMaharashtraDb;User Id=SA;Password=LionGroup@2026!;TrustServerCertificate=True;MultipleActiveResultSets=true"
+    ports:
+      - "5128:8080"
+    volumes:
+      - uploads-data:/app/wwwroot/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ──────────────────────────────────────────
+  # React Frontend (Nginx)
+  # ──────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend/lion-group-web
+      dockerfile: Dockerfile
+    container_name: liongroup-web
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  sqlserver-data:
+  uploads-data:
