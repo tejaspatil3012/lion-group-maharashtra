@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
+  UserPlus,
   Calendar,
   Activity,
   Image as ImageIcon,
@@ -16,6 +17,7 @@ import {
 export const AdminSidebar = ({ isOpen, onClose, onLogout }) => {
   const navItems = [
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
+    { to: "/admin/membership-requests", label: "Membership Requests", icon: UserPlus },
     { to: "/admin/members", label: "Members & Leadership", icon: Users },
     { to: "/admin/events", label: "Events & Conclaves", icon: Calendar },
     { to: "/admin/activities", label: "Social Activities", icon: Activity },

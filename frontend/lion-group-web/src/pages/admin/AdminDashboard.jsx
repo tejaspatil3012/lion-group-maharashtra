@@ -5,9 +5,11 @@ import { eventService } from "../../services/eventService";
 import { activityService } from "../../services/activityService";
 import { galleryService } from "../../services/galleryService";
 import { contactService } from "../../services/contactService";
+import { membershipService } from "../../services/membershipService";
 import { LoadingSpinner } from "../../components/common/LoadingSpinner";
 import {
   Users,
+  UserPlus,
   Calendar,
   Activity,
   Image as ImageIcon,
@@ -19,6 +21,7 @@ import {
 export const AdminDashboard = () => {
   const [stats, setStats] = useState({
     membersCount: 0,
+    requestsCount: 0,
     eventsCount: 0,
     activitiesCount: 0,
     albumsCount: 0,
@@ -29,8 +32,9 @@ export const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [members, events, activities, albums, inquiries] = await Promise.allSettled([
+        const [members, requests, events, activities, albums, inquiries] = await Promise.allSettled([
           memberService.getAllMembers(),
+          membershipService.getAllApplications(),
           eventService.getEvents(),
           activityService.getActivities(),
           galleryService.getAlbums(),
@@ -39,6 +43,9 @@ export const AdminDashboard = () => {
 
         setStats({
           membersCount: members.status === "fulfilled" && Array.isArray(members.value) ? members.value.length : 0,
+          requestsCount: requests.status === "fulfilled" && Array.isArray(requests.value)
+            ? requests.value.filter((r) => r.status === "Pending").length
+            : 0,
           eventsCount: events.status === "fulfilled" && Array.isArray(events.value) ? events.value.length : 0,
           activitiesCount: activities.status === "fulfilled" && Array.isArray(activities.value) ? activities.value.length : 0,
           albumsCount: albums.status === "fulfilled" && Array.isArray(albums.value) ? albums.value.length : 0,
@@ -56,7 +63,8 @@ export const AdminDashboard = () => {
   if (loading) return <LoadingSpinner message="Loading Dashboard Metrics..." />;
 
   const statCards = [
-    { title: "Total Members", count: stats.membersCount, icon: Users, to: "/admin/members", color: "#D4AF37" },
+    { title: "Active Members", count: stats.membersCount, icon: Users, to: "/admin/members", color: "#D4AF37" },
+    { title: "Pending Requests", count: stats.requestsCount, icon: UserPlus, to: "/admin/membership-requests", color: "#F59E0B" },
     { title: "Social Activities", count: stats.activitiesCount, icon: Activity, to: "/admin/activities", color: "#3B82F6" },
     { title: "Conclaves & Events", count: stats.eventsCount, icon: Calendar, to: "/admin/events", color: "#10B981" },
     { title: "Photo Albums", count: stats.albumsCount, icon: ImageIcon, to: "/admin/gallery", color: "#8B5CF6" },
@@ -71,7 +79,7 @@ export const AdminDashboard = () => {
           Admin Management Dashboard
         </h1>
         <p style={{ color: "var(--text-light-muted)", fontSize: "0.95rem" }}>
-          Manage your live database records, members, events, activities, and organization details directly.
+          Manage your live database records, member requests, events, activities, and organization details directly.
         </p>
       </div>
 
@@ -141,7 +149,11 @@ export const AdminDashboard = () => {
           gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
           gap: "1rem"
         }}>
-          <Link to="/admin/members?action=add" className="btn btn-gold" style={{ justifyContent: "center" }}>
+          <Link to="/admin/membership-requests" className="btn btn-gold" style={{ justifyContent: "center" }}>
+            <UserPlus size={16} />
+            <span>Review Member Requests</span>
+          </Link>
+          <Link to="/admin/members?action=add" className="btn btn-outline-gold" style={{ justifyContent: "center" }}>
             <Users size={16} />
             <span>Add New Member</span>
           </Link>
@@ -152,10 +164,6 @@ export const AdminDashboard = () => {
           <Link to="/admin/events?action=add" className="btn btn-outline-gold" style={{ justifyContent: "center" }}>
             <Calendar size={16} />
             <span>Add New Event</span>
-          </Link>
-          <Link to="/admin/gallery?action=add" className="btn btn-outline-gold" style={{ justifyContent: "center" }}>
-            <ImageIcon size={16} />
-            <span>Create Photo Album</span>
           </Link>
         </div>
       </div>

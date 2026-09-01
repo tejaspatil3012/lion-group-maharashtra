@@ -17,6 +17,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<GalleryImage> GalleryImages => Set<GalleryImage>();
     public DbSet<OrganizationInfo> OrganizationInfos => Set<OrganizationInfo>();
     public DbSet<ContactInquiry> ContactInquiries => Set<ContactInquiry>();
+    public DbSet<MembershipApplication> MembershipApplications => Set<MembershipApplication>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

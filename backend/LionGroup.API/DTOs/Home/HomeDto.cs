@@ -17,6 +17,13 @@ public class HomeDto
     public string PresidentMessageMarathi { get; set; } = string.Empty;
     public string? PresidentPhotoUrl { get; set; }
     
+    // Contact & Emergency
+    public string PrimaryPhone { get; set; } = string.Empty;
+    public string EmergencyBloodHelpline { get; set; } = string.Empty;
+    public string PrimaryEmail { get; set; } = string.Empty;
+    public string HeadOfficeAddressEnglish { get; set; } = string.Empty;
+    public string HeadOfficeAddressMarathi { get; set; } = string.Empty;
+
     // Impact Counters
     public int TotalMembersCount { get; set; }
     public int TotalBloodUnitsDonated { get; set; }

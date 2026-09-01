@@ -212,8 +212,8 @@ export const AdminMembersPage = () => {
         >
           <option value="">All Districts (सर्व जिल्हे)</option>
           {MAHARASHTRA_DISTRICTS.map((d) => (
-            <option key={d.en} value={d.en}>
-              {d.en} ({d.mr})
+            <option key={d} value={d}>
+              {d}
             </option>
           ))}
         </select>
@@ -443,8 +443,8 @@ export const AdminMembersPage = () => {
                     onChange={(e) => setFormData({ ...formData, district: e.target.value })}
                   >
                     {MAHARASHTRA_DISTRICTS.map((d) => (
-                      <option key={d.en} value={d.en}>
-                        {d.en} ({d.mr})
+                      <option key={d} value={d}>
+                        {d}
                       </option>
                     ))}
                   </select>

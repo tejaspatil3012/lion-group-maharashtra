@@ -45,15 +45,15 @@ export const AdminSettingsPage = () => {
             presidentPhotoUrl: data.presidentPhotoUrl || "/uploads/king.jpeg",
             presidentMessageEnglish: data.presidentMessageEnglish || "",
             presidentMessageMarathi: data.presidentMessageMarathi || "",
-            headOfficeAddressEnglish: data.headOfficeAddressEnglish || "Lion Group Central Office, Kingaon, Tal. Yawal, Dist. Jalgaon",
-            headOfficeAddressMarathi: data.headOfficeAddressMarathi || "लायन ग्रुप राज्य मुख्य कार्यालय, चौधरी वाडा, किनगाव, ता. यावल, जि. जळगाव",
-            primaryPhone: data.primaryPhone || "+91 98220 12345",
-            emergencyBloodHelpline: data.emergencyBloodHelpline || "+91 98220 99999",
-            primaryEmail: data.primaryEmail || "contact@liongroupmaharashtra.org",
-            totalMembersCount: data.totalMembersCount || 2850,
-            totalBloodUnitsDonated: data.totalBloodUnitsDonated || 5420,
-            totalTreesPlanted: data.totalTreesPlanted || 18600,
-            totalBeneficiariesServed: data.totalBeneficiariesServed || 62000
+            headOfficeAddressEnglish: data.headOfficeAddressEnglish ?? "Lion Group Central Office, Kingaon, Tal. Yawal, Dist. Jalgaon",
+            headOfficeAddressMarathi: data.headOfficeAddressMarathi ?? "लायन ग्रुप राज्य मुख्य कार्यालय, चौधरी वाडा, किनगाव, ता. यावल, जि. जळगाव",
+            primaryPhone: data.primaryPhone ?? "+91 98220 12345",
+            emergencyBloodHelpline: data.emergencyBloodHelpline ?? "+91 98220 99999",
+            primaryEmail: data.primaryEmail ?? "contact@liongroupmaharashtra.org",
+            totalMembersCount: data.totalMembersCount ?? 2850,
+            totalBloodUnitsDonated: data.totalBloodUnitsDonated ?? 5420,
+            totalTreesPlanted: data.totalTreesPlanted ?? 18600,
+            totalBeneficiariesServed: data.totalBeneficiariesServed ?? 62000
           });
         }
       } catch (err) {

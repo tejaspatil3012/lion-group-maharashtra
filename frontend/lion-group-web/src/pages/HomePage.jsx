@@ -241,9 +241,13 @@ export const HomePage = () => {
             </div>
 
             <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <a href="tel:+919822099999" className="btn btn-saffron" style={{ padding: "0.85rem 1.75rem", fontSize: "1.05rem" }}>
+              <a
+                href={`tel:${(homeData?.emergencyBloodHelpline || "+91 9370078254").replace(/\s+/g, "")}`}
+                className="btn btn-saffron"
+                style={{ padding: "0.85rem 1.75rem", fontSize: "1.05rem" }}
+              >
                 <Heart size={20} fill="#FFFFFF" />
-                <span>+91 98220 99999</span>
+                <span>{homeData?.emergencyBloodHelpline || "+91 9370078254"}</span>
               </a>
 
               <Link to="/contact" className="btn btn-outline-gold" style={{ padding: "0.85rem 1.75rem", fontSize: "1.05rem" }}>

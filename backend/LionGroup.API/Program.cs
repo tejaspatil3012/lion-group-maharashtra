@@ -30,6 +30,7 @@ builder.Services.AddScoped<IGalleryService, GalleryService>();
 builder.Services.AddScoped<IAboutService, AboutService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IMembershipApplicationService, MembershipApplicationService>();
 
 // 3. Configure Controllers & JSON serialization
 builder.Services.AddControllers()

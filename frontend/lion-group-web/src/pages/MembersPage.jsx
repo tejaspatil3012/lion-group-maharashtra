@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useLanguage } from "../hooks/useLanguage";
 import { memberService } from "../services/memberService";
 import { PageHeader } from "../components/common/PageHeader";
@@ -154,7 +155,7 @@ export const MembersPage = () => {
             </div>
           </div>
 
-          {/* Members Count Status */}
+          {/* Members Count Status & Join CTA */}
           <div style={{
             display: "flex",
             justifyContent: "space-between",
@@ -162,7 +163,9 @@ export const MembersPage = () => {
             marginBottom: "1.75rem",
             fontSize: "0.95rem",
             color: "var(--text-muted)",
-            fontWeight: 600
+            fontWeight: 600,
+            flexWrap: "wrap",
+            gap: "1rem"
           }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
               <Users size={18} color="var(--primary-gold-dark)" />
@@ -172,6 +175,14 @@ export const MembersPage = () => {
                   : `Total Members Displayed: ${filteredMembers.length}`}
               </span>
             </div>
+
+            <Link
+              to="/be-a-member"
+              className="btn btn-gold"
+              style={{ padding: "0.5rem 1.25rem", fontSize: "0.875rem" }}
+            >
+              <span>{lang === "mr" ? "+ सदस्य नोंदणी करा" : "+ Be A Member"}</span>
+            </Link>
           </div>
 
           {/* Loading / Error / Grid */}

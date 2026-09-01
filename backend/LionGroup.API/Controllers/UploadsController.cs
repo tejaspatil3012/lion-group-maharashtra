@@ -49,6 +49,21 @@ public class UploadsController : ControllerBase
             await file.CopyToAsync(stream);
         }
 
+        // Auto-sync to frontend public/uploads for local development
+        try
+        {
+            var frontendUploads = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "frontend", "lion-group-web", "public", "uploads"));
+            if (Directory.Exists(frontendUploads))
+            {
+                var frontendFilePath = Path.Combine(frontendUploads, uniqueFileName);
+                System.IO.File.Copy(filePath, frontendFilePath, true);
+            }
+        }
+        catch
+        {
+            // Ignore if in production/standalone container
+        }
+
         var fileUrl = $"/uploads/{uniqueFileName}";
         return Ok(new
         {

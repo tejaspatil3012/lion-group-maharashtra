@@ -1,10 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../hooks/useLanguage";
+import { contactService } from "../../services/contactService";
 import { MapPin, Phone, Mail, Heart, ChevronRight, Award } from "lucide-react";
 
 export const Footer = () => {
   const { lang, t } = useLanguage();
+  const [contactInfo, setContactInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchContact = async () => {
+      try {
+        const data = await contactService.getContactInfo();
+        if (data) setContactInfo(data);
+      } catch (err) {
+        // Fallback silently
+      }
+    };
+    fetchContact();
+  }, []);
+
+  const primaryPhone = contactInfo?.primaryPhone || "+91 9370078254";
+  const helpline = contactInfo?.emergencyBloodHelpline || "+91 9370078254";
+  const primaryEmail = contactInfo?.primaryEmail || "contact@liongroupmaharashtra.org";
+  const address = lang === "mr"
+    ? (contactInfo?.headOfficeAddressMarathi || "लायन ग्रुप राज्य मुख्य कार्यालय, चौधरी वाडा, किनगाव, ता. यावल, जि. जळगाव")
+    : (contactInfo?.headOfficeAddressEnglish || "Lion Group HQ Chaudhari wada Kingaon, Maharashtra");
 
   return (
     <footer style={{
@@ -58,7 +79,7 @@ export const Footer = () => {
               lineHeight: 1.7,
               marginBottom: "1.5rem"
             }}>
-              {t.footer.tagline}
+              {t.footer.aboutText}
             </p>
 
             <div style={{
@@ -66,14 +87,15 @@ export const Footer = () => {
               alignItems: "center",
               gap: "0.5rem",
               padding: "0.4rem 0.85rem",
-              backgroundColor: "rgba(212, 175, 55, 0.1)",
-              border: "1px solid rgba(212, 175, 55, 0.25)",
+              backgroundColor: "rgba(212, 175, 55, 0.12)",
+              border: "1px solid var(--border-gold)",
               borderRadius: "var(--radius-full)",
               fontSize: "0.8rem",
-              color: "var(--primary-gold)"
+              color: "var(--primary-gold)",
+              fontWeight: 600
             }}>
               <Award size={14} />
-              <span>{lang === "mr" ? "महाराष्ट्र शासन नोंदणीकृत" : "Registered Social Organization"}</span>
+              <span>{lang === "mr" ? "महाराष्ट्र शासन नोंदणीकृत सामाजिक संस्था" : "Govt. Registered NGO"}</span>
             </div>
           </div>
 
@@ -90,33 +112,33 @@ export const Footer = () => {
             }}>
               {t.footer.quickLinks}
             </h4>
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               {[
                 { to: "/", label: t.nav.home },
                 { to: "/about", label: t.nav.about },
                 { to: "/leadership", label: t.nav.leadership },
                 { to: "/members", label: t.nav.members },
-                { to: "/activities", label: t.nav.activities },
                 { to: "/events", label: t.nav.events },
                 { to: "/gallery", label: t.nav.gallery },
                 { to: "/contact", label: t.nav.contact }
-              ].map((link) => (
-                <li key={link.to}>
+              ].map((link, idx) => (
+                <li key={idx}>
                   <Link
                     to={link.to}
                     style={{
                       color: "var(--text-light-muted)",
-                      display: "inline-flex",
+                      textDecoration: "none",
+                      display: "flex",
                       alignItems: "center",
                       gap: "0.4rem",
                       fontSize: "0.925rem",
-                      transition: "color 0.2s ease"
+                      transition: "all 0.2s ease"
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "var(--primary-gold)")}
                     onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-light-muted)")}
                   >
                     <ChevronRight size={14} color="var(--primary-gold)" />
-                    {link.label}
+                    <span>{link.label}</span>
                   </Link>
                 </li>
               ))}
@@ -134,7 +156,7 @@ export const Footer = () => {
               borderLeft: "3px solid var(--primary-gold)",
               paddingLeft: "0.75rem"
             }}>
-              {t.footer.socialCauses}
+              {t.footer.coreCauses}
             </h4>
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               {[
@@ -148,11 +170,12 @@ export const Footer = () => {
                     to="/activities"
                     style={{
                       color: "var(--text-light-muted)",
-                      display: "inline-flex",
+                      textDecoration: "none",
+                      display: "flex",
                       alignItems: "center",
                       gap: "0.5rem",
                       fontSize: "0.925rem",
-                      transition: "color 0.2s ease"
+                      transition: "all 0.2s ease"
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "var(--primary-gold)")}
                     onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-light-muted)")}
@@ -176,22 +199,20 @@ export const Footer = () => {
               borderLeft: "3px solid var(--primary-gold)",
               paddingLeft: "0.75rem"
             }}>
-              {t.footer.contactInfo}
+              {t.footer.contactUs}
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem", fontSize: "0.9rem" }}>
               <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
                 <MapPin size={18} color="var(--primary-gold)" style={{ flexShrink: 0, marginTop: "0.2rem" }} />
                 <span style={{ color: "var(--text-light-muted)", lineHeight: 1.5 }}>
-                  {lang === "mr"
-                    ? "लायन ग्रुप राज्य मुख्य कार्यालय, चौधरी वाडा,किनगाव, ता. यावल, जि. जळगाव"
-                    : "Lion Group HQ Chaudhari wada Kingaon, Maharashtra"}
+                  {address}
                 </span>
               </div>
 
               <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
                 <Phone size={18} color="var(--primary-gold)" style={{ flexShrink: 0 }} />
-                <a href="tel:+919822012345" style={{ color: "#FFFFFF", textDecoration: "none", fontWeight: 600 }}>
-                  +91 98220 12345
+                <a href={`tel:${primaryPhone.replace(/\s+/g, "")}`} style={{ color: "#FFFFFF", textDecoration: "none", fontWeight: 600 }}>
+                  {primaryPhone}
                 </a>
               </div>
 
@@ -209,16 +230,16 @@ export const Footer = () => {
                   <div style={{ fontSize: "0.75rem", color: "#FCA5A5", fontWeight: 600 }}>
                     {t.nav.emergency}
                   </div>
-                  <a href="tel:+919822099999" style={{ color: "#FFFFFF", textDecoration: "none", fontWeight: 700 }}>
-                    +91 98220 99999
+                  <a href={`tel:${helpline.replace(/\s+/g, "")}`} style={{ color: "#FFFFFF", textDecoration: "none", fontWeight: 700 }}>
+                    {helpline}
                   </a>
                 </div>
               </div>
 
               <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
                 <Mail size={18} color="var(--primary-gold)" style={{ flexShrink: 0 }} />
-                <a href="mailto:contact@liongroupmaharashtra.org" style={{ color: "var(--text-light-muted)", textDecoration: "none" }}>
-                  contact@liongroupmaharashtra.org
+                <a href={`mailto:${primaryEmail}`} style={{ color: "var(--text-light-muted)", textDecoration: "none" }}>
+                  {primaryEmail}
                 </a>
               </div>
             </div>

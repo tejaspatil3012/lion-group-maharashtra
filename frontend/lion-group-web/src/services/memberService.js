@@ -17,6 +17,10 @@ export const memberService = {
     const res = await api.get("/members/designations");
     return res.data !== undefined ? res.data : res;
   },
+  getAllDesignations: async () => {
+    const res = await api.get("/members/designations");
+    return res.data !== undefined ? res.data : res;
+  },
   createMember: async (data) => {
     const res = await api.post("/members", data);
     return res.data !== undefined ? res.data : res;

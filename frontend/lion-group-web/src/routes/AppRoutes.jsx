@@ -8,6 +8,7 @@ import { HomePage } from "../pages/HomePage";
 import { AboutPage } from "../pages/AboutPage";
 import { LeadershipPage } from "../pages/LeadershipPage";
 import { MembersPage } from "../pages/MembersPage";
+import { JoinPage } from "../pages/JoinPage";
 import { ActivitiesPage } from "../pages/ActivitiesPage";
 import { ActivityDetailPage } from "../pages/ActivityDetailPage";
 import { EventsPage } from "../pages/EventsPage";
@@ -19,6 +20,7 @@ import { NotFoundPage } from "../pages/NotFoundPage";
 
 // Admin Pages
 import { AdminDashboard } from "../pages/admin/AdminDashboard";
+import { AdminMembershipRequestsPage } from "../pages/admin/AdminMembershipRequestsPage";
 import { AdminMembersPage } from "../pages/admin/AdminMembersPage";
 import { AdminEventsPage } from "../pages/admin/AdminEventsPage";
 import { AdminActivitiesPage } from "../pages/admin/AdminActivitiesPage";
@@ -35,6 +37,8 @@ export const AppRoutes = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/leadership" element={<LeadershipPage />} />
         <Route path="/members" element={<MembersPage />} />
+        <Route path="/be-a-member" element={<JoinPage />} />
+        <Route path="/join" element={<JoinPage />} />
         <Route path="/activities" element={<ActivitiesPage />} />
         <Route path="/activities/:id" element={<ActivityDetailPage />} />
         <Route path="/events" element={<EventsPage />} />
@@ -48,6 +52,7 @@ export const AppRoutes = () => {
       {/* Admin Portal Pages */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
+        <Route path="membership-requests" element={<AdminMembershipRequestsPage />} />
         <Route path="members" element={<AdminMembersPage />} />
         <Route path="events" element={<AdminEventsPage />} />
         <Route path="activities" element={<AdminActivitiesPage />} />

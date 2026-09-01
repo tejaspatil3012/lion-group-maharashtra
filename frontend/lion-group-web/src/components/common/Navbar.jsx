@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useLanguage } from "../../hooks/useLanguage";
-import { Phone, Heart, Globe, Menu, X, Shield, MapPin } from "lucide-react";
+import { contactService } from "../../services/contactService";
+import { Phone, Heart, Globe, Menu, X } from "lucide-react";
 
 export const Navbar = () => {
   const { lang, toggleLanguage, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [contactInfo, setContactInfo] = useState(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -25,11 +27,27 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const fetchContact = async () => {
+      try {
+        const data = await contactService.getContactInfo();
+        if (data) setContactInfo(data);
+      } catch (err) {
+        // Fallback silently
+      }
+    };
+    fetchContact();
+  }, []);
+
+  const helpline = contactInfo?.emergencyBloodHelpline || "+91 9370078254";
+  const primaryPhone = contactInfo?.primaryPhone || "+91 9370078254";
+
   const navLinks = [
     { to: "/", label: t.nav.home },
     { to: "/about", label: t.nav.about },
     { to: "/leadership", label: t.nav.leadership },
     { to: "/members", label: t.nav.members },
+    { to: "/be-a-member", label: lang === "mr" ? "सदस्य व्हा" : "Be A Member" },
     { to: "/activities", label: t.nav.activities },
     { to: "/events", label: t.nav.events },
     { to: "/gallery", label: t.nav.gallery },
@@ -43,9 +61,9 @@ export const Navbar = () => {
       zIndex: 1000,
       backgroundColor: "#070D1E",
       boxShadow: scrolled ? "0 4px 20px rgba(0, 0, 0, 0.4)" : "none",
-      transition: "all 0.3s ease"
+      transition: "box-shadow 0.3s ease"
     }}>
-      {/* Top Notification / Helpline Bar */}
+      {/* Top Banner: Emergency Blood Helpline & Lang Toggle */}
       <div style={{
         backgroundColor: "#0B1528",
         borderBottom: "1px solid rgba(212, 175, 55, 0.15)",
@@ -65,15 +83,15 @@ export const Navbar = () => {
             <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "#F87171", fontWeight: 600 }}>
               <Heart size={14} fill="#EF4444" color="#EF4444" className="pulse-glow" />
               <span>{t.nav.emergency}:</span>
-              <a href="tel:+919822099999" style={{ color: "#FFFFFF", textDecoration: "none", fontWeight: 700 }}>
-                +91 98220 99999
+              <a href={`tel:${helpline.replace(/\s+/g, "")}`} style={{ color: "#FFFFFF", textDecoration: "none", fontWeight: 700 }}>
+                {helpline}
               </a>
             </div>
 
             <div style={{ display: "none", alignItems: "center", gap: "0.4rem", color: "var(--text-light-muted)" }} className="hide-mobile">
               <Phone size={14} color="var(--primary-gold)" />
-              <a href="tel:+919822012345" style={{ color: "var(--text-light-muted)", textDecoration: "none" }}>
-                +91 98220 12345
+              <a href={`tel:${primaryPhone.replace(/\s+/g, "")}`} style={{ color: "var(--text-light-muted)", textDecoration: "none" }}>
+                {primaryPhone}
               </a>
             </div>
           </div>
@@ -228,6 +246,7 @@ export const Navbar = () => {
             <NavLink
               key={link.to}
               to={link.to}
+              onClick={() => setMobileMenuOpen(false)}
               style={({ isActive }) => ({
                 padding: "0.75rem 1rem",
                 fontSize: "1.05rem",
@@ -245,6 +264,7 @@ export const Navbar = () => {
 
           <Link
             to="/contact"
+            onClick={() => setMobileMenuOpen(false)}
             className="btn btn-gold"
             style={{
               marginTop: "0.5rem",
