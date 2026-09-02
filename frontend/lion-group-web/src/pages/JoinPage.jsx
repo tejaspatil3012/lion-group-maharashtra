@@ -4,7 +4,7 @@ import { useLanguage } from "../hooks/useLanguage";
 import { membershipService } from "../services/membershipService";
 import { uploadService } from "../services/uploadService";
 import { MAHARASHTRA_DISTRICTS } from "../utils/constants";
-import api from "../services/api";
+import api, { getImageUrl } from "../services/api";
 import {
   UserPlus,
   CheckCircle,
@@ -214,7 +214,7 @@ export const JoinPage = () => {
               <div style={{ display: "flex", gap: "1.25rem", alignItems: "center" }}>
                 {submittedApp.photoUrl && (
                   <img
-                    src={submittedApp.photoUrl}
+                    src={getImageUrl(submittedApp.photoUrl)}
                     alt="Applicant"
                     style={{ width: "65px", height: "65px", borderRadius: "50%", objectFit: "cover", border: "2px solid var(--primary-gold)" }}
                   />
@@ -338,7 +338,7 @@ export const JoinPage = () => {
                   }}>
                     {formData.photoUrl ? (
                       <img
-                        src={formData.photoUrl}
+                        src={getImageUrl(formData.photoUrl)}
                         alt="Preview"
                         style={{ width: "100%", height: "100%", objectFit: "cover" }}
                         onError={(e) => {

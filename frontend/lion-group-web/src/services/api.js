@@ -24,4 +24,15 @@ api.interceptors.response.use(
   }
 );
 
+export const BACKEND_URL = API_BASE_URL.replace(/\/api\/?$/, "");
+
+export const getImageUrl = (url) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
+    return url;
+  }
+  const clean = url.startsWith("/") ? url : `/${url}`;
+  return `${BACKEND_URL}${clean}`;
+};
+
 export default api;

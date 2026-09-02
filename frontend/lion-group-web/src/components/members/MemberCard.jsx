@@ -1,4 +1,5 @@
 import React from "react";
+import { getImageUrl } from "../../services/api";
 import { useLanguage } from "../../hooks/useLanguage";
 import { MapPin, Phone, Mail, Award, Calendar } from "lucide-react";
 
@@ -7,6 +8,7 @@ export const MemberCard = ({ member }) => {
 
   const fullName = lang === "mr" ? (member.fullNameMarathi || member.fullNameEnglish) : member.fullNameEnglish;
   const designation = lang === "mr" ? (member.designationMarathi || member.designationEnglish) : member.designationEnglish;
+  const rawPhoto = getImageUrl(member.photoUrl);
 
   return (
     <div
@@ -54,7 +56,7 @@ export const MemberCard = ({ member }) => {
         backgroundColor: "#0E1A33"
       }}>
         <img
-          src={member.photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"}
+          src={rawPhoto || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"}
           alt={fullName}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />

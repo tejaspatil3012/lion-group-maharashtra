@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { getImageUrl } from "../../services/api";
 import { uploadService } from "../../services/uploadService";
 import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react";
 
@@ -60,7 +61,7 @@ export const ImageUploadField = ({ label, value, onChange, placeholder = "Upload
         }}>
           {value ? (
             <img
-              src={value}
+              src={getImageUrl(value)}
               alt="Preview"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
               onError={(e) => { e.currentTarget.style.display = "none"; }}

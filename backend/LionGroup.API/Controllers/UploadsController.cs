@@ -64,10 +64,15 @@ public class UploadsController : ControllerBase
             // Ignore if in production/standalone container
         }
 
-        var fileUrl = $"/uploads/{uniqueFileName}";
+        var host = Request.Headers["X-Forwarded-Host"].FirstOrDefault() ?? Request.Host.Value;
+        var scheme = Request.Headers["X-Forwarded-Proto"].FirstOrDefault() ?? Request.Scheme;
+        var baseUrl = $"{scheme}://{host}";
+        var fileUrl = $"{baseUrl}/uploads/{uniqueFileName}";
+
         return Ok(new
         {
             url = fileUrl,
+            relativeUrl = $"/uploads/{uniqueFileName}",
             fileName = uniqueFileName,
             originalName = file.FileName,
             size = file.Length
