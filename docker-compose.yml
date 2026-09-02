@@ -26,7 +26,7 @@ services:
   # ──────────────────────────────────────────
   backend:
     build:
-      context: ./backend/LionGroup.API
+      context: .
       dockerfile: Dockerfile
     container_name: liongroup-api
     environment:
