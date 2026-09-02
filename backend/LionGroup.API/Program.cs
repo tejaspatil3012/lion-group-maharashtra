@@ -8,18 +8,45 @@ using LionGroup.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configure Database (SQL Server)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? "Server=localhost;Database=LionGroupMaharashtraDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true";
+// 1. Configure Database (SQL Server for local dev, SQLite for cloud / container fallback)
+var defaultConn = builder.Configuration.GetConnectionString("DefaultConnection");
+var dbProvider = builder.Configuration["DATABASE_PROVIDER"];
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions =>
+{
+    if (string.Equals(dbProvider, "Sqlite", StringComparison.OrdinalIgnoreCase) ||
+        (!string.IsNullOrWhiteSpace(defaultConn) && (defaultConn.Contains(".db", StringComparison.OrdinalIgnoreCase) || defaultConn.StartsWith("Data Source=", StringComparison.OrdinalIgnoreCase))))
     {
-        sqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 3,
-            maxRetryDelay: TimeSpan.FromSeconds(5),
-            errorNumbersToAdd: null);
-    }));
+        var sqliteConn = !string.IsNullOrWhiteSpace(defaultConn) ? defaultConn : "Data Source=liongroup.db";
+        options.UseSqlite(sqliteConn);
+    }
+    else if (!string.IsNullOrWhiteSpace(defaultConn) && defaultConn.Contains("Server=", StringComparison.OrdinalIgnoreCase))
+    {
+        options.UseSqlServer(defaultConn, sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null);
+        });
+    }
+    else if (builder.Environment.IsDevelopment())
+    {
+        var localSqlServer = "Server=localhost;Database=LionGroupMaharashtraDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true";
+        options.UseSqlServer(localSqlServer, sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null);
+        });
+    }
+    else
+    {
+        // Default for Cloud Production if no external SQL Server is configured
+        options.UseSqlite("Data Source=liongroup.db");
+    }
+});
 
 // 2. Register Application Services (Dependency Injection)
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();

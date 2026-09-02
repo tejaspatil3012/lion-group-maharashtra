@@ -9,30 +9,33 @@ public static class DbInitializer
     {
         await context.Database.EnsureCreatedAsync();
 
-        // Ensure MembershipApplications table exists in existing database
-        await context.Database.ExecuteSqlRawAsync(@"
-            IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'MembershipApplications')
-            BEGIN
-                CREATE TABLE [MembershipApplications] (
-                    [Id] int NOT NULL IDENTITY,
-                    [FullNameEnglish] nvarchar(150) NOT NULL,
-                    [FullNameMarathi] nvarchar(150) NOT NULL,
-                    [MobileNumber] nvarchar(20) NOT NULL,
-                    [Email] nvarchar(150) NULL,
-                    [District] nvarchar(100) NOT NULL,
-                    [Taluka] nvarchar(100) NULL,
-                    [VillageOrCity] nvarchar(100) NULL,
-                    [PhotoUrl] nvarchar(500) NULL,
-                    [Occupation] nvarchar(150) NULL,
-                    [Message] nvarchar(1000) NULL,
-                    [Status] nvarchar(50) NOT NULL,
-                    [AppliedAt] datetime2 NOT NULL,
-                    [ReviewedAt] datetime2 NULL,
-                    [ApprovedMemberId] int NULL,
-                    CONSTRAINT [PK_MembershipApplications] PRIMARY KEY ([Id])
-                );
-            END
-        ");
+        // Ensure MembershipApplications table exists in existing SQL Server database
+        if (context.Database.IsSqlServer())
+        {
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'MembershipApplications')
+                BEGIN
+                    CREATE TABLE [MembershipApplications] (
+                        [Id] int NOT NULL IDENTITY,
+                        [FullNameEnglish] nvarchar(150) NOT NULL,
+                        [FullNameMarathi] nvarchar(150) NOT NULL,
+                        [MobileNumber] nvarchar(20) NOT NULL,
+                        [Email] nvarchar(150) NULL,
+                        [District] nvarchar(100) NOT NULL,
+                        [Taluka] nvarchar(100) NULL,
+                        [VillageOrCity] nvarchar(100) NULL,
+                        [PhotoUrl] nvarchar(500) NULL,
+                        [Occupation] nvarchar(150) NULL,
+                        [Message] nvarchar(1000) NULL,
+                        [Status] nvarchar(50) NOT NULL,
+                        [AppliedAt] datetime2 NOT NULL,
+                        [ReviewedAt] datetime2 NULL,
+                        [ApprovedMemberId] int NULL,
+                        CONSTRAINT [PK_MembershipApplications] PRIMARY KEY ([Id])
+                    );
+                END
+            ");
+        }
 
         if (await context.OrganizationInfos.AnyAsync())
         {
