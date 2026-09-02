@@ -17,12 +17,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     if (string.Equals(dbProvider, "Sqlite", StringComparison.OrdinalIgnoreCase) ||
         (!string.IsNullOrWhiteSpace(defaultConn) && (defaultConn.Contains(".db", StringComparison.OrdinalIgnoreCase) || defaultConn.StartsWith("Data Source=", StringComparison.OrdinalIgnoreCase))))
     {
-        var sqliteConn = !string.IsNullOrWhiteSpace(defaultConn) ? defaultConn : "Data Source=liongroup.db";
+        var sqliteConn = !string.IsNullOrWhiteSpace(defaultConn) && defaultConn.Contains(".db") ? defaultConn : "Data Source=liongroup.db";
         options.UseSqlite(sqliteConn);
     }
-    else if (!string.IsNullOrWhiteSpace(defaultConn) && defaultConn.Contains("Server=", StringComparison.OrdinalIgnoreCase))
+    else if (builder.Environment.IsDevelopment())
     {
-        options.UseSqlServer(defaultConn, sqlOptions =>
+        var localSqlServer = !string.IsNullOrWhiteSpace(defaultConn) ? defaultConn : "Server=localhost;Database=LionGroupMaharashtraDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true";
+        options.UseSqlServer(localSqlServer, sqlOptions =>
         {
             sqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 3,
@@ -30,10 +31,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 errorNumbersToAdd: null);
         });
     }
-    else if (builder.Environment.IsDevelopment())
+    else if (!string.IsNullOrWhiteSpace(defaultConn) && defaultConn.Contains("Server=", StringComparison.OrdinalIgnoreCase) && !defaultConn.Contains("localhost", StringComparison.OrdinalIgnoreCase))
     {
-        var localSqlServer = "Server=localhost;Database=LionGroupMaharashtraDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true";
-        options.UseSqlServer(localSqlServer, sqlOptions =>
+        // Real cloud SQL Server (Azure/AWS) provided in production
+        options.UseSqlServer(defaultConn, sqlOptions =>
         {
             sqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 3,
@@ -43,7 +44,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     }
     else
     {
-        // Default for Cloud Production if no external SQL Server is configured
+        // Cloud Production Default (Render, Koyeb, Docker): SQLite
         options.UseSqlite("Data Source=liongroup.db");
     }
 });
