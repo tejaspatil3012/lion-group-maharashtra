@@ -53,15 +53,12 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// 5. Configure CORS for React SPA
+// 5. Configure CORS for React SPA (Localhost, Vercel, Netlify, Render)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:5173",
-                "http://127.0.0.1:5173",
-                "http://localhost:3000")
+        policy.SetIsOriginAllowed(_ => true)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
