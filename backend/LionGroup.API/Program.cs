@@ -6,6 +6,9 @@ using LionGroup.API.Interfaces;
 using LionGroup.API.Middleware;
 using LionGroup.API.Services;
 
+// Enable legacy timestamp behavior so Npgsql accepts DateTime without explicit UTC kind
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Configure Database (PostgreSQL/Supabase, SQL Server for local dev, SQLite fallback)
