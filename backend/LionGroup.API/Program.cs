@@ -22,18 +22,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
                                                      defaultConn.Contains("supabase", StringComparison.OrdinalIgnoreCase) ||
                                                      (defaultConn.Contains("Host=", StringComparison.OrdinalIgnoreCase) && (defaultConn.Contains("5432") || defaultConn.Contains("6543"))))))
     {
-        var connStr = defaultConn;
-        // Convert postgres:// URI to Npgsql connection string if provided in URI format
-        if (!string.IsNullOrWhiteSpace(connStr) && (connStr.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase) || connStr.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase)))
-        {
-            var uri = new Uri(connStr);
-            var userInfo = uri.UserInfo.Split(':');
-            var user = userInfo[0];
-            var pass = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
-            var port = uri.Port > 0 ? uri.Port : 5432;
-            var database = uri.AbsolutePath.TrimStart('/');
-            connStr = $"Host={uri.Host};Port={port};Database={database};Username={user};Password={pass};Pooling=true;SSL Mode=Require;Trust Server Certificate=true;";
-        }
+        var connStr = FormatPostgreSqlConnectionString(defaultConn!);
 
         options.UseNpgsql(connStr, npgsqlOptions =>
         {
@@ -183,3 +172,56 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+// Helper to safely parse PostgreSQL / Supabase connection strings (handles special characters like @ or # in passwords)
+static string FormatPostgreSqlConnectionString(string raw)
+{
+    if (string.IsNullOrWhiteSpace(raw)) return raw;
+
+    var conn = raw.Trim().Trim('"', '\'');
+
+    // If already in ADO.NET Key-Value format (Host=...;Database=...;Username=...;Password=...)
+    if (conn.Contains("Host=", StringComparison.OrdinalIgnoreCase) ||
+        conn.Contains("Server=", StringComparison.OrdinalIgnoreCase))
+    {
+        if (!conn.Contains("SSL Mode=", StringComparison.OrdinalIgnoreCase) && !conn.Contains("sslmode=", StringComparison.OrdinalIgnoreCase))
+        {
+            conn = conn.TrimEnd(';') + ";SSL Mode=Require;Trust Server Certificate=true;";
+        }
+        return conn;
+    }
+
+    // If in postgresql:// or postgres:// URI format
+    if (conn.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase) ||
+        conn.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase))
+    {
+        try
+        {
+            // Match pattern: postgresql://[user]:[password]@[host]:[port]/[database]
+            // Password group uses non-greedy match before the LAST '@' preceding host
+            var match = System.Text.RegularExpressions.Regex.Match(
+                conn,
+                @"^postgres(?:ql)?:\/\/(?<user>[^:]+):(?<pass>.+)@(?<host>[^:\/@]+)(?::(?<port>\d+))?\/(?<db>[^?]+)"
+            );
+
+            if (match.Success)
+            {
+                var user = match.Groups["user"].Value;
+                var pass = match.Groups["pass"].Value;
+                var host = match.Groups["host"].Value;
+                var port = match.Groups["port"].Success ? match.Groups["port"].Value : "5432";
+                var db = match.Groups["db"].Value;
+
+                try { pass = Uri.UnescapeDataString(pass); } catch { }
+
+                return $"Host={host};Port={port};Database={db};Username={user};Password={pass};Pooling=true;SSL Mode=Require;Trust Server Certificate=true;";
+            }
+        }
+        catch
+        {
+            // Fallback to raw string
+        }
+    }
+
+    return conn;
+}
