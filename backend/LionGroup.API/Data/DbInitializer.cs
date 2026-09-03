@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using LionGroup.API.Models;
 
 namespace LionGroup.API.Data;
@@ -7,7 +9,22 @@ public static class DbInitializer
 {
     public static async Task InitializeAsync(ApplicationDbContext context)
     {
+        // First, try the standard EnsureCreatedAsync (works for SQLite and fresh databases)
         await context.Database.EnsureCreatedAsync();
+
+        // For Supabase/PostgreSQL: EnsureCreatedAsync may skip table creation because
+        // Supabase's postgres database already has system tables (auth, storage, etc.).
+        // Explicitly verify our tables exist, and create them if they don't.
+        try
+        {
+            await context.OrganizationInfos.AnyAsync();
+        }
+        catch
+        {
+            // Our tables don't exist — create them explicitly
+            var creator = context.GetService<IRelationalDatabaseCreator>();
+            await creator.CreateTablesAsync();
+        }
 
         // Ensure MembershipApplications table exists in existing SQL Server database
         if (context.Database.IsSqlServer())
