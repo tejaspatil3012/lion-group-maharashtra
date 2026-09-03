@@ -8,13 +8,42 @@ using LionGroup.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configure Database (SQL Server for local dev, SQLite for cloud / container fallback)
+// 1. Configure Database (PostgreSQL/Supabase, SQL Server for local dev, SQLite fallback)
 var defaultConn = builder.Configuration.GetConnectionString("DefaultConnection");
 var dbProvider = builder.Configuration["DATABASE_PROVIDER"];
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    if (string.Equals(dbProvider, "Sqlite", StringComparison.OrdinalIgnoreCase) ||
+    // Check if configured for PostgreSQL (Supabase, Neon, etc.)
+    if (string.Equals(dbProvider, "PostgreSql", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(dbProvider, "Supabase", StringComparison.OrdinalIgnoreCase) ||
+        (!string.IsNullOrWhiteSpace(defaultConn) && (defaultConn.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase) ||
+                                                     defaultConn.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) ||
+                                                     defaultConn.Contains("supabase", StringComparison.OrdinalIgnoreCase) ||
+                                                     (defaultConn.Contains("Host=", StringComparison.OrdinalIgnoreCase) && (defaultConn.Contains("5432") || defaultConn.Contains("6543"))))))
+    {
+        var connStr = defaultConn;
+        // Convert postgres:// URI to Npgsql connection string if provided in URI format
+        if (!string.IsNullOrWhiteSpace(connStr) && (connStr.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase) || connStr.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase)))
+        {
+            var uri = new Uri(connStr);
+            var userInfo = uri.UserInfo.Split(':');
+            var user = userInfo[0];
+            var pass = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+            var port = uri.Port > 0 ? uri.Port : 5432;
+            var database = uri.AbsolutePath.TrimStart('/');
+            connStr = $"Host={uri.Host};Port={port};Database={database};Username={user};Password={pass};Pooling=true;SSL Mode=Require;Trust Server Certificate=true;";
+        }
+
+        options.UseNpgsql(connStr, npgsqlOptions =>
+        {
+            npgsqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorCodesToAdd: null);
+        });
+    }
+    else if (string.Equals(dbProvider, "Sqlite", StringComparison.OrdinalIgnoreCase) ||
         (!string.IsNullOrWhiteSpace(defaultConn) && (defaultConn.Contains(".db", StringComparison.OrdinalIgnoreCase) || defaultConn.StartsWith("Data Source=", StringComparison.OrdinalIgnoreCase))))
     {
         var sqliteConn = !string.IsNullOrWhiteSpace(defaultConn) && defaultConn.Contains(".db") ? defaultConn : "Data Source=liongroup.db";
