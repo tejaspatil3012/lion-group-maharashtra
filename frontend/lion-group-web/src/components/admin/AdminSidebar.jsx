@@ -9,6 +9,8 @@ import {
   Image as ImageIcon,
   Settings,
   Mail,
+  Target,
+  HeartHandshake,
   ExternalLink,
   ShieldCheck,
   LogOut
@@ -21,6 +23,8 @@ export const AdminSidebar = ({ isOpen, onClose, onLogout }) => {
     { to: "/admin/members", label: "Members & Leadership", icon: Users },
     { to: "/admin/events", label: "Events & Conclaves", icon: Calendar },
     { to: "/admin/activities", label: "Social Activities", icon: Activity },
+    { to: "/admin/campaigns", label: "Donation Campaigns", icon: Target },
+    { to: "/admin/donations", label: "Donation Records", icon: HeartHandshake },
     { to: "/admin/gallery", label: "Photo Gallery", icon: ImageIcon },
     { to: "/admin/settings", label: "Organization Info", icon: Settings },
     { to: "/admin/inquiries", label: "Contact Inquiries", icon: Mail },

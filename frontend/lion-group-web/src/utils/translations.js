@@ -9,6 +9,7 @@ export const translations = {
       events: "कार्यक्रम",
       gallery: "छायाचित्रे",
       contact: "संपर्क",
+      donate: "देणगी द्या",
       emergency: "आपत्कालीन रक्त हेल्पलाइन"
     },
     hero: {
@@ -151,6 +152,7 @@ export const translations = {
       events: "Events",
       gallery: "Gallery",
       contact: "Contact Us",
+      donate: "Donate Now",
       emergency: "Emergency Blood Helpline"
     },
     hero: {

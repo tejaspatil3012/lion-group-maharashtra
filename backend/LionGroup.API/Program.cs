@@ -81,6 +81,7 @@ builder.Services.AddScoped<IAboutService, AboutService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IMembershipApplicationService, MembershipApplicationService>();
+builder.Services.AddScoped<IDonationService, DonationService>();
 
 // 3. Configure Controllers & JSON serialization
 builder.Services.AddControllers()
@@ -154,7 +155,8 @@ app.MapGet("/", () => Results.Json(new
         "/api/activities",
         "/api/events",
         "/api/gallery",
-        "/api/contact"
+        "/api/contact",
+        "/api/donations"
     }
 }));
 

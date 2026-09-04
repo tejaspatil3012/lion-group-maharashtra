@@ -18,6 +18,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<OrganizationInfo> OrganizationInfos => Set<OrganizationInfo>();
     public DbSet<ContactInquiry> ContactInquiries => Set<ContactInquiry>();
     public DbSet<MembershipApplication> MembershipApplications => Set<MembershipApplication>();
+    public DbSet<DonationCampaign> DonationCampaigns => Set<DonationCampaign>();
+    public DbSet<Donation> Donations => Set<Donation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -153,6 +155,47 @@ public class ApplicationDbContext : DbContext
             entity.Property(c => c.Subject).HasMaxLength(200).IsUnicode(true).IsRequired();
             entity.Property(c => c.Message).HasMaxLength(2000).IsUnicode(true).IsRequired();
             entity.Property(c => c.District).HasMaxLength(100).IsUnicode(true);
+        });
+
+        // DonationCampaign
+        modelBuilder.Entity<DonationCampaign>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.TitleEnglish).HasMaxLength(200).IsUnicode(true).IsRequired();
+            entity.Property(c => c.TitleMarathi).HasMaxLength(200).IsUnicode(true).IsRequired();
+            entity.Property(c => c.SummaryEnglish).HasMaxLength(500).IsUnicode(true);
+            entity.Property(c => c.SummaryMarathi).HasMaxLength(500).IsUnicode(true);
+            entity.Property(c => c.DescriptionEnglish).IsUnicode(true);
+            entity.Property(c => c.DescriptionMarathi).IsUnicode(true);
+            entity.Property(c => c.TargetAmount).HasColumnType("decimal(18,2)");
+            entity.Property(c => c.RaisedAmount).HasColumnType("decimal(18,2)");
+            entity.Property(c => c.BannerImageUrl).HasMaxLength(500);
+
+            entity.HasMany(c => c.Donations)
+                  .WithOne(d => d.Campaign)
+                  .HasForeignKey(d => d.CampaignId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // Donation
+        modelBuilder.Entity<Donation>(entity =>
+        {
+            entity.HasKey(d => d.Id);
+            entity.Property(d => d.DonorName).HasMaxLength(150).IsUnicode(true).IsRequired();
+            entity.Property(d => d.DonorMobile).HasMaxLength(20).IsRequired();
+            entity.Property(d => d.DonorEmail).HasMaxLength(150);
+            entity.Property(d => d.DonorPanNumber).HasMaxLength(20);
+            entity.Property(d => d.City).HasMaxLength(100).IsUnicode(true);
+            entity.Property(d => d.Amount).HasColumnType("decimal(18,2)");
+            entity.Property(d => d.PaymentMethod).HasMaxLength(50).IsRequired();
+            entity.Property(d => d.UtrNumber).HasMaxLength(100);
+            entity.Property(d => d.PaymentStatus).HasMaxLength(50).IsRequired();
+            entity.Property(d => d.ReceiptNumber).HasMaxLength(50).IsRequired();
+            entity.Property(d => d.Notes).HasMaxLength(500).IsUnicode(true);
+
+            entity.HasIndex(d => d.ReceiptNumber).IsUnique();
+            entity.HasIndex(d => d.PaymentStatus);
+            entity.HasIndex(d => d.DonatedAt);
         });
     }
 }

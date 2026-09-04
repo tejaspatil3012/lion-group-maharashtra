@@ -555,3 +555,15 @@ textarea.input-field {
     transform: rotate(360deg);
   }
 }
+
+/* Print Media Rules */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
+  
+  nav, footer, .btn, .navbar, .page-header, .admin-sidebar, .admin-navbar {
+    display: none !important;
+  }
+}

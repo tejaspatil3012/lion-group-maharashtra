@@ -51,6 +51,7 @@ export const Navbar = () => {
     { to: "/activities", label: t.nav.activities },
     { to: "/events", label: t.nav.events },
     { to: "/gallery", label: t.nav.gallery },
+    { to: "/donate", label: t.nav.donate },
     { to: "/contact", label: t.nav.contact }
   ];
 
@@ -197,15 +198,23 @@ export const Navbar = () => {
             ))}
 
             <Link
-              to="/contact"
+              to="/donate"
               className="btn btn-gold"
               style={{
                 marginLeft: "0.5rem",
                 padding: "0.5rem 1.15rem",
-                fontSize: "0.875rem"
+                fontSize: "0.875rem",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                background: "linear-gradient(135deg, #E63946 0%, #D4AF37 100%)",
+                color: "#FFFFFF",
+                border: "none",
+                fontWeight: 700
               }}
             >
-              {t.nav.contact}
+              <Heart size={15} fill="#FFFFFF" />
+              {t.nav.donate}
             </Link>
           </nav>
 
@@ -263,16 +272,25 @@ export const Navbar = () => {
           ))}
 
           <Link
-            to="/contact"
+            to="/donate"
             onClick={() => setMobileMenuOpen(false)}
             className="btn btn-gold"
             style={{
               marginTop: "0.5rem",
               width: "100%",
-              padding: "0.75rem"
+              padding: "0.75rem",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              background: "linear-gradient(135deg, #E63946 0%, #D4AF37 100%)",
+              color: "#FFFFFF",
+              border: "none",
+              fontWeight: 700
             }}
           >
-            {t.nav.contact}
+            <Heart size={18} fill="#FFFFFF" />
+            {t.nav.donate}
           </Link>
         </div>
       )}

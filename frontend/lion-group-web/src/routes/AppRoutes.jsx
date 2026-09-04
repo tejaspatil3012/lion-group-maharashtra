@@ -16,6 +16,7 @@ import { EventDetailPage } from "../pages/EventDetailPage";
 import { GalleryPage } from "../pages/GalleryPage";
 import { AlbumDetailPage } from "../pages/AlbumDetailPage";
 import { ContactPage } from "../pages/ContactPage";
+import { DonatePage } from "../pages/DonatePage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 
 // Admin Pages
@@ -27,6 +28,8 @@ import { AdminActivitiesPage } from "../pages/admin/AdminActivitiesPage";
 import { AdminGalleryPage } from "../pages/admin/AdminGalleryPage";
 import { AdminSettingsPage } from "../pages/admin/AdminSettingsPage";
 import { AdminInquiriesPage } from "../pages/admin/AdminInquiriesPage";
+import { AdminCampaignsPage } from "../pages/admin/AdminCampaignsPage";
+import { AdminDonationsPage } from "../pages/admin/AdminDonationsPage";
 
 export const AppRoutes = () => {
   return (
@@ -45,6 +48,7 @@ export const AppRoutes = () => {
         <Route path="/events/:id" element={<EventDetailPage />} />
         <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/gallery/:id" element={<AlbumDetailPage />} />
+        <Route path="/donate" element={<DonatePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
@@ -56,6 +60,8 @@ export const AppRoutes = () => {
         <Route path="members" element={<AdminMembersPage />} />
         <Route path="events" element={<AdminEventsPage />} />
         <Route path="activities" element={<AdminActivitiesPage />} />
+        <Route path="campaigns" element={<AdminCampaignsPage />} />
+        <Route path="donations" element={<AdminDonationsPage />} />
         <Route path="gallery" element={<AdminGalleryPage />} />
         <Route path="settings" element={<AdminSettingsPage />} />
         <Route path="inquiries" element={<AdminInquiriesPage />} />
