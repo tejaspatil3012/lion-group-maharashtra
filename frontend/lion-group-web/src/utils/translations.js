@@ -63,6 +63,11 @@ export const translations = {
       categoryTree: "वृक्षारोपण",
       categoryHealth: "आरोग्य तपासणी",
       categoryFood: "अन्नदान व मदत",
+      categoryEducation: "शिक्षण",
+      categoryCleanliness: "स्वच्छता मोहीम",
+      categoryWomenEmpowerment: "महिला सबलीकरण",
+      categoryCulturalCommunity: "सांस्कृतिक व सामुदायिक उपक्रम",
+      categoryYouthDevelopment: "युवा विकास",
       filterByDistrict: "जिल्ह्यानुसार निवडा",
       searchPlaceholder: "उपक्रमाचे नाव किंवा ठिकाण शोधा..."
     },
@@ -200,6 +205,11 @@ export const translations = {
       categoryTree: "Tree Plantation",
       categoryHealth: "Health Camp",
       categoryFood: "Food Relief",
+      categoryEducation: "Education",
+      categoryCleanliness: "Cleanliness Drive",
+      categoryWomenEmpowerment: "Women Empowerment",
+      categoryCulturalCommunity: "Cultural & Community Activities",
+      categoryYouthDevelopment: "Youth Development",
       filterByDistrict: "Filter by District",
       searchPlaceholder: "Search activity by title or location..."
     },

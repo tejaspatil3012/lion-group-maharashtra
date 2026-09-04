@@ -24,6 +24,16 @@ export const ActivityCard = ({ activity }) => {
         return <span className="badge badge-health">🏥 {t.activities.categoryHealth}</span>;
       case "FoodDistribution":
         return <span className="badge badge-gold">🍲 {t.activities.categoryFood}</span>;
+      case "Education":
+        return <span className="badge badge-health">📚 {t.activities.categoryEducation}</span>;
+      case "CleanlinessDrive":
+        return <span className="badge badge-tree">🧹 {t.activities.categoryCleanliness}</span>;
+      case "WomenEmpowerment":
+        return <span className="badge badge-blood">👩 {t.activities.categoryWomenEmpowerment}</span>;
+      case "CulturalCommunity":
+        return <span className="badge badge-gold">🎭 {t.activities.categoryCulturalCommunity}</span>;
+      case "YouthDevelopment":
+        return <span className="badge badge-gold">⚡ {t.activities.categoryYouthDevelopment}</span>;
       default:
         return <span className="badge badge-gold">🦁 {activity.category}</span>;
     }

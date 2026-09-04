@@ -205,6 +205,11 @@ export const AdminActivitiesPage = () => {
           <option value="TreePlantation">Tree Plantation (वृक्षारोपण)</option>
           <option value="HealthCamp">Health Camp (आरोग्य शिबिर)</option>
           <option value="FoodDistribution">Food Relief (अन्नदान)</option>
+          <option value="Education">Education (शिक्षण)</option>
+          <option value="CleanlinessDrive">Cleanliness Drive (स्वच्छता मोहीम)</option>
+          <option value="WomenEmpowerment">Women Empowerment (महिला सबलीकरण)</option>
+          <option value="CulturalCommunity">Cultural & Community Activities (सांस्कृतिक व सामुदायिक उपक्रम)</option>
+          <option value="YouthDevelopment">Youth Development (युवा विकास)</option>
         </select>
       </div>
 
@@ -397,6 +402,11 @@ export const AdminActivitiesPage = () => {
                     <option value="TreePlantation">Tree Plantation (वृक्षारोपण)</option>
                     <option value="HealthCamp">Health Camp (आरोग्य तपासणी)</option>
                     <option value="FoodDistribution">Food Relief (अन्नदान मोहीम)</option>
+                    <option value="Education">Education (शिक्षण)</option>
+                    <option value="CleanlinessDrive">Cleanliness Drive (स्वच्छता मोहीम)</option>
+                    <option value="WomenEmpowerment">Women Empowerment (महिला सबलीकरण)</option>
+                    <option value="CulturalCommunity">Cultural & Community Activities (सांस्कृतिक व सामुदायिक उपक्रम)</option>
+                    <option value="YouthDevelopment">Youth Development (युवा विकास)</option>
                   </select>
                 </div>
 

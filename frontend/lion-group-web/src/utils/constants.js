@@ -13,5 +13,10 @@ export const ACTIVITY_CATEGORIES = [
   { key: "TreePlantation", labelEn: "Tree Plantation", labelMr: "वृक्षारोपण" },
   { key: "HealthCamp", labelEn: "Health Camp", labelMr: "आरोग्य शिबिर" },
   { key: "FoodDistribution", labelEn: "Food Relief", labelMr: "अन्नदान व मदत" },
+  { key: "Education", labelEn: "Education", labelMr: "शिक्षण" },
+  { key: "CleanlinessDrive", labelEn: "Cleanliness Drive", labelMr: "स्वच्छता मोहीम" },
+  { key: "WomenEmpowerment", labelEn: "Women Empowerment", labelMr: "महिला सबलीकरण" },
+  { key: "CulturalCommunity", labelEn: "Cultural & Community Activities", labelMr: "सांस्कृतिक व सामुदायिक उपक्रम" },
+  { key: "YouthDevelopment", labelEn: "Youth Development", labelMr: "युवा विकास" },
   { key: "Social", labelEn: "Community Service", labelMr: "समाजसेवा" }
 ];
