@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using LionGroup.API.Interfaces;
 
 namespace LionGroup.API.Services;
@@ -5,10 +6,20 @@ namespace LionGroup.API.Services;
 public class FileStorageService : IFileStorageService
 {
     private readonly IWebHostEnvironment _environment;
+    private readonly IConfiguration _configuration;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<FileStorageService> _logger;
 
-    public FileStorageService(IWebHostEnvironment environment)
+    public FileStorageService(
+        IWebHostEnvironment environment,
+        IConfiguration configuration,
+        IHttpClientFactory httpClientFactory,
+        ILogger<FileStorageService> logger)
     {
         _environment = environment;
+        _configuration = configuration;
+        _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
 
     public async Task<string> SaveFileAsync(IFormFile file, string subFolder)
@@ -18,6 +29,119 @@ public class FileStorageService : IFileStorageService
             throw new ArgumentException("No file provided");
         }
 
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var supabaseKey = _configuration["Supabase:ServiceRoleKey"];
+        var bucketName = _configuration["Supabase:StorageBucket"] ?? "uploads";
+
+        // Use Supabase Storage if configured, otherwise fall back to local disk
+        if (!string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supabaseKey))
+        {
+            return await UploadToSupabaseAsync(file, subFolder, supabaseUrl, supabaseKey, bucketName);
+        }
+
+        return await SaveToLocalDiskAsync(file, subFolder);
+    }
+
+    public void DeleteFile(string relativeFilePath)
+    {
+        if (string.IsNullOrWhiteSpace(relativeFilePath)) return;
+
+        var supabaseUrl = _configuration["Supabase:Url"];
+        var supabaseKey = _configuration["Supabase:ServiceRoleKey"];
+        var bucketName = _configuration["Supabase:StorageBucket"] ?? "uploads";
+
+        if (!string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supabaseKey))
+        {
+            _ = DeleteFromSupabaseAsync(relativeFilePath, supabaseUrl, supabaseKey, bucketName);
+            return;
+        }
+
+        DeleteFromLocalDisk(relativeFilePath);
+    }
+
+    // ── Supabase Storage ──
+
+    private async Task<string> UploadToSupabaseAsync(
+        IFormFile file, string subFolder, string supabaseUrl, string supabaseKey, string bucketName)
+    {
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        var uniqueFileName = $"{Guid.NewGuid():N}{extension}";
+        var storagePath = string.IsNullOrWhiteSpace(subFolder)
+            ? uniqueFileName
+            : $"{subFolder}/{uniqueFileName}";
+
+        // POST https://<project>.supabase.co/storage/v1/object/<bucket>/<path>
+        var uploadUrl = $"{supabaseUrl}/storage/v1/object/{bucketName}/{storagePath}";
+
+        var client = _httpClientFactory.CreateClient();
+        using var memoryStream = new MemoryStream();
+        await file.CopyToAsync(memoryStream);
+        var fileBytes = memoryStream.ToArray();
+
+        var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl);
+        request.Headers.Add("Authorization", $"Bearer {supabaseKey}");
+        request.Headers.Add("apikey", supabaseKey);
+
+        // Send as raw binary with correct content type (not multipart)
+        var contentType = file.ContentType ?? "application/octet-stream";
+        request.Content = new ByteArrayContent(fileBytes);
+        request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+
+        // Enable upsert in case file already exists
+        request.Headers.Add("x-upsert", "true");
+
+        var response = await client.SendAsync(request);
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Supabase Storage upload failed ({StatusCode}): {Error}", response.StatusCode, errorBody);
+            throw new Exception($"Failed to upload to Supabase Storage: {response.StatusCode}");
+        }
+
+        // Return the public URL
+        var publicUrl = $"{supabaseUrl}/storage/v1/object/public/{bucketName}/{storagePath}";
+        _logger.LogInformation("File uploaded to Supabase Storage: {Url}", publicUrl);
+        return publicUrl;
+    }
+
+    private async Task DeleteFromSupabaseAsync(
+        string fileUrl, string supabaseUrl, string supabaseKey, string bucketName)
+    {
+        try
+        {
+            // Extract the storage path from the full URL or relative path
+            string storagePath;
+            var publicPrefix = $"{supabaseUrl}/storage/v1/object/public/{bucketName}/";
+            if (fileUrl.StartsWith(publicPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                storagePath = fileUrl[publicPrefix.Length..];
+            }
+            else
+            {
+                storagePath = fileUrl.TrimStart('/');
+                if (storagePath.StartsWith("uploads/", StringComparison.OrdinalIgnoreCase))
+                    storagePath = storagePath["uploads/".Length..];
+            }
+
+            var deleteUrl = $"{supabaseUrl}/storage/v1/object/{bucketName}/{storagePath}";
+
+            var client = _httpClientFactory.CreateClient();
+            var request = new HttpRequestMessage(HttpMethod.Delete, deleteUrl);
+            request.Headers.Add("Authorization", $"Bearer {supabaseKey}");
+            request.Headers.Add("apikey", supabaseKey);
+
+            await client.SendAsync(request);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to delete file from Supabase Storage: {Path}", fileUrl);
+        }
+    }
+
+    // ── Local Disk (development fallback) ──
+
+    private async Task<string> SaveToLocalDiskAsync(IFormFile file, string subFolder)
+    {
         var webRoot = _environment.WebRootPath ?? Path.Combine(_environment.ContentRootPath, "wwwroot");
         var uploadsDir = Path.Combine(webRoot, "uploads", subFolder);
 
@@ -38,10 +162,8 @@ public class FileStorageService : IFileStorageService
         return $"/uploads/{subFolder}/{uniqueFileName}";
     }
 
-    public void DeleteFile(string relativeFilePath)
+    private void DeleteFromLocalDisk(string relativeFilePath)
     {
-        if (string.IsNullOrWhiteSpace(relativeFilePath)) return;
-
         var webRoot = _environment.WebRootPath ?? Path.Combine(_environment.ContentRootPath, "wwwroot");
         var physicalPath = Path.Combine(webRoot, relativeFilePath.TrimStart('/'));
 

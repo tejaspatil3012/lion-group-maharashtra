@@ -71,6 +71,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 // 2. Register Application Services (Dependency Injection)
+builder.Services.AddHttpClient(); // For Supabase Storage API calls
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IActivityService, ActivityService>();
