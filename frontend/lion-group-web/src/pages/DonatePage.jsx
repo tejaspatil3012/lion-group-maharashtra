@@ -364,6 +364,10 @@ export const DonatePage = () => {
                           src={getImageUrl(camp.bannerImageUrl) || "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80"}
                           alt={title}
                           style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80";
+                          }}
                         />
                         <div style={{
                           position: "absolute",

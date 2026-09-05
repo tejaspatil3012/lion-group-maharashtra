@@ -199,6 +199,10 @@ export const AdminCampaignsPage = () => {
                   src={getImageUrl(camp.bannerImageUrl) || "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80"}
                   alt={camp.titleEnglish}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80";
+                  }}
                 />
                 <div style={{
                   position: "absolute",
@@ -357,7 +361,7 @@ export const AdminCampaignsPage = () => {
                   label="Banner Poster Image"
                   value={formData.bannerImageUrl}
                   onChange={(url) => setFormData({ ...formData, bannerImageUrl: url })}
-                  placeholder="/uploads/ambulance_drive.jpg"
+                  placeholder="Upload campaign banner or paste Supabase URL"
                 />
               </div>
 

@@ -91,6 +91,35 @@ public class UploadsController : ControllerBase
             });
         }
 
+        // Forward to production API if local environment lacks direct Supabase service role key
+        try
+        {
+            var proxyClient = _httpClientFactory.CreateClient();
+            proxyClient.Timeout = TimeSpan.FromSeconds(30);
+
+            using var content = new MultipartFormDataContent();
+            using var fileStream = file.OpenReadStream();
+            using var streamContent = new StreamContent(fileStream);
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType ?? "application/octet-stream");
+            content.Add(streamContent, "file", file.FileName);
+
+            var proxyResponse = await proxyClient.PostAsync("https://lion-group-maharashtra.onrender.com/api/uploads", content);
+            if (proxyResponse.IsSuccessStatusCode)
+            {
+                var responseJson = await proxyResponse.Content.ReadAsStringAsync();
+                return Content(responseJson, "application/json");
+            }
+            else
+            {
+                var err = await proxyResponse.Content.ReadAsStringAsync();
+                _logger.LogWarning("Proxy upload to production failed ({StatusCode}): {Error}", proxyResponse.StatusCode, err);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to proxy upload to production Supabase handler, falling back to local disk.");
+        }
+
         // Fallback: save to local disk (development)
         var uploadsFolder = Path.Combine(_environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "uploads");
         if (!Directory.Exists(uploadsFolder))

@@ -25,13 +25,36 @@ api.interceptors.response.use(
 );
 
 export const BACKEND_URL = API_BASE_URL.replace(/\/api\/?$/, "");
+export const SUPABASE_STORAGE_URL = "https://cmvynbqmalnflnwcfvre.supabase.co/storage/v1/object/public/uploads";
 
 export const getImageUrl = (url) => {
   if (!url) return "";
-  if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:") || url.startsWith("blob:")) {
+  
+  // 1. Direct Supabase Storage URL or inline data / blob
+  if (url.includes("supabase.co") || url.startsWith("data:") || url.startsWith("blob:")) {
     return url;
   }
+
+  // 2. Fix legacy localhost URLs saved in DB by pointing directly to Supabase storage
+  if (url.includes("localhost") && url.includes("/uploads/")) {
+    const fileName = url.split("/uploads/").pop();
+    if (fileName) return `${SUPABASE_STORAGE_URL}/${fileName}`;
+  }
+
+  // 3. Other full HTTP/HTTPS URLs (e.g. Unsplash)
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  // 4. Relative /uploads/ path -> prioritize Supabase Storage bucket
   const clean = url.startsWith("/") ? url : `/${url}`;
+  if (clean.startsWith("/uploads/")) {
+    const fileName = clean.replace(/^\/uploads\//, "");
+    if (fileName && !fileName.includes("/")) {
+      return `${SUPABASE_STORAGE_URL}/${fileName}`;
+    }
+  }
+
   return `${BACKEND_URL}${clean}`;
 };
 

@@ -33,10 +33,39 @@ public class FileStorageService : IFileStorageService
         var supabaseKey = _configuration["Supabase:ServiceRoleKey"];
         var bucketName = _configuration["Supabase:StorageBucket"] ?? "uploads";
 
-        // Use Supabase Storage if configured, otherwise fall back to local disk
+        // Use Supabase Storage if configured
         if (!string.IsNullOrWhiteSpace(supabaseUrl) && !string.IsNullOrWhiteSpace(supabaseKey))
         {
             return await UploadToSupabaseAsync(file, subFolder, supabaseUrl, supabaseKey, bucketName);
+        }
+
+        // Forward to production API if local environment lacks direct Supabase service role key
+        try
+        {
+            var proxyClient = _httpClientFactory.CreateClient();
+            proxyClient.Timeout = TimeSpan.FromSeconds(30);
+
+            using var content = new MultipartFormDataContent();
+            using var fileStream = file.OpenReadStream();
+            using var streamContent = new StreamContent(fileStream);
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType ?? "application/octet-stream");
+            content.Add(streamContent, "file", file.FileName);
+
+            var proxyResponse = await proxyClient.PostAsync("https://lion-group-maharashtra.onrender.com/api/uploads", content);
+            if (proxyResponse.IsSuccessStatusCode)
+            {
+                var responseJson = await proxyResponse.Content.ReadAsStringAsync();
+                using var doc = System.Text.Json.JsonDocument.Parse(responseJson);
+                if (doc.RootElement.TryGetProperty("url", out var urlProp))
+                {
+                    var url = urlProp.GetString();
+                    if (!string.IsNullOrWhiteSpace(url)) return url;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to proxy upload to production Supabase handler, falling back to local disk.");
         }
 
         return await SaveToLocalDiskAsync(file, subFolder);
