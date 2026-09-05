@@ -50,7 +50,7 @@ export const DonatePage = () => {
   const [createdReceipt, setCreatedReceipt] = useState(null);
   const [copiedUpi, setCopiedUpi] = useState(false);
 
-  const orgUpiId = "9370078254@ybl"; // Official UPI ID
+  const orgUpiId = "8080186093@ybl"; // Official UPI ID
   const orgName = "LION GROUP MAHARASHTRA RAJYA";
 
   useEffect(() => {
