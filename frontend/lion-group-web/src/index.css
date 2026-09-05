@@ -567,3 +567,79 @@ textarea.input-field {
     display: none !important;
   }
 }
+
+/* =========================================================
+   DONOR LEDGER RESPONSIVE COMPONENT STYLES
+========================================================= */
+.donor-ledger-container {
+  background: #FFFFFF;
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--radius-xl);
+  padding: 1.25rem 0.85rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+@media (min-width: 768px) {
+  .donor-ledger-container {
+    padding: 2rem;
+  }
+}
+
+.donor-ledger-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .donor-ledger-filter-group {
+    width: auto;
+  }
+}
+
+.donor-ledger-select {
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #CBD5E1;
+  background: #F8FAFC;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0F172A;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .donor-ledger-select {
+    width: auto;
+    min-width: 220px;
+    max-width: 320px;
+    font-size: 0.875rem;
+  }
+}
+
+.donor-ledger-desktop-table {
+  display: none;
+}
+
+.donor-ledger-mobile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 0.15rem;
+}
+
+@media (min-width: 768px) {
+  .donor-ledger-desktop-table {
+    display: block;
+  }
+  .donor-ledger-mobile-cards {
+    display: none;
+  }
+}
+

@@ -336,8 +336,8 @@ export const DonatePage = () => {
             ) : (
               <div style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-                gap: "2rem"
+                gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+                gap: "1.5rem"
               }}>
                 {campaigns.map((camp) => {
                   const title = lang === "mr" ? camp.titleMarathi : camp.titleEnglish;
@@ -480,13 +480,7 @@ export const DonatePage = () => {
               });
 
             return (
-              <div style={{
-                background: "#FFFFFF",
-                border: "1.5px solid #E2E8F0",
-                borderRadius: "var(--radius-xl)",
-                padding: "2rem",
-                boxShadow: "0 4px 20px rgba(0,0,0,0.04)"
-              }}>
+              <div className="donor-ledger-container">
                 {/* Header with Title and Campaign Filter Dropdown */}
                 <div style={{
                   display: "flex",
@@ -505,42 +499,31 @@ export const DonatePage = () => {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "var(--primary-gold-dark)"
+                      color: "var(--primary-gold-dark)",
+                      flexShrink: 0
                     }}>
                       <Award size={22} />
                     </div>
                     <div>
-                      <h3 style={{ fontSize: "1.3rem", fontWeight: 800, color: "#0F172A", margin: 0, fontFamily: "var(--font-heading)" }}>
+                      <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0F172A", margin: 0, fontFamily: "var(--font-heading)", wordBreak: "break-word" }}>
                         {lang === "mr" ? "कृतज्ञता सूची / सन्माननीय देणगीदार" : "Public Donation Ledger & Donors"}
                       </h3>
-                      <p style={{ fontSize: "0.85rem", color: "#64748B", margin: "0.15rem 0 0 0" }}>
+                      <p style={{ fontSize: "0.825rem", color: "#64748B", margin: "0.15rem 0 0 0" }}>
                         {lang === "mr" ? "समाजाच्या कल्याणासाठी हातभार लावणारे दानशूर व्यक्ती" : "Public record of contributions received for social initiatives"}
                       </p>
                     </div>
                   </div>
 
                   {/* Campaign Filter */}
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                    <span style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem", color: "#475569", fontSize: "0.875rem", fontWeight: 700 }}>
+                  <div className="donor-ledger-filter-group">
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem", color: "#475569", fontSize: "0.85rem", fontWeight: 700, whiteSpace: "nowrap" }}>
                       <Filter size={15} color="var(--primary-gold-dark)" />
-                      {lang === "mr" ? "मोहीम निवडा:" : "Filter Cause:"}
+                      {lang === "mr" ? "मोहीम:" : "Cause:"}
                     </span>
                     <select
                       value={donorCampaignFilter}
                       onChange={(e) => setDonorCampaignFilter(e.target.value)}
-                      style={{
-                        padding: "0.5rem 0.85rem",
-                        borderRadius: "var(--radius-md)",
-                        border: "1.5px solid #CBD5E1",
-                        background: "#F8FAFC",
-                        fontSize: "0.875rem",
-                        fontWeight: 600,
-                        color: "#0F172A",
-                        outline: "none",
-                        cursor: "pointer",
-                        minWidth: "220px",
-                        maxWidth: "320px"
-                      }}
+                      className="donor-ledger-select"
                     >
                       <option value="all">
                         {lang === "mr" ? "सर्व उपक्रम / मोहिमा (All Causes)" : "All Campaigns & Causes"}
@@ -557,9 +540,9 @@ export const DonatePage = () => {
                   </div>
                 </div>
 
-                {/* Table */}
+                {/* Donors Content */}
                 {filteredDonors.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "3rem 1rem", background: "#F8FAFC", borderRadius: "var(--radius-lg)" }}>
+                  <div style={{ textAlign: "center", padding: "2.5rem 1rem", background: "#F8FAFC", borderRadius: "var(--radius-lg)" }}>
                     <p style={{ color: "#64748B", fontSize: "0.95rem", margin: 0 }}>
                       {lang === "mr"
                         ? "निवडलेल्या मोहिमेसाठी अद्याप कोणतीही देणगी नोंद उपलब्ध नाही."
@@ -567,64 +550,152 @@ export const DonatePage = () => {
                     </p>
                   </div>
                 ) : (
-                  <div style={{
-                    overflowX: "auto",
-                    maxHeight: "440px",
-                    overflowY: "auto",
-                    border: "1px solid #E2E8F0",
-                    borderRadius: "var(--radius-lg)"
-                  }}>
-                    <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.875rem" }}>
-                      <thead style={{ position: "sticky", top: 0, zIndex: 5 }}>
-                        <tr style={{ background: "#F1F5F9", borderBottom: "1.5px solid #CBD5E1", color: "#334155" }}>
-                          <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
-                            {lang === "mr" ? "पावती व दिनांक (Receipt & Date)" : "Receipt & Date"}
-                          </th>
-                          <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
-                            {lang === "mr" ? "देणगीदार तपशील (Donor Details)" : "Donor Details"}
-                          </th>
-                          <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
-                            {lang === "mr" ? "मोहीम / उद्देश (Cause / Campaign)" : "Cause / Campaign"}
-                          </th>
-                          <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
-                            {lang === "mr" ? "रक्कम (Amount)" : "Amount (₹)"}
-                          </th>
-                          <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
-                            {lang === "mr" ? "माध्यम व UTR (Method & UTR)" : "Method & UTR"}
-                          </th>
-                          <th style={{ padding: "0.85rem 1rem", fontWeight: 700, textAlign: "center" }}>
-                            {lang === "mr" ? "स्थिती (Status)" : "Status"}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredDonors.map((d, index) => {
-                          const isEven = index % 2 === 0;
-                          const causeTitle = lang === "mr"
-                            ? (d.campaignTitleMarathi || d.campaignTitleEnglish || "सर्वसाधारण समाजकार्य निधी")
-                            : (d.campaignTitleEnglish || "General Social Welfare Corpus");
+                  <>
+                    {/* Desktop Table View (>= 768px) */}
+                    <div className="donor-ledger-desktop-table" style={{
+                      overflowX: "auto",
+                      maxHeight: "440px",
+                      overflowY: "auto",
+                      border: "1px solid #E2E8F0",
+                      borderRadius: "var(--radius-lg)"
+                    }}>
+                      <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "0.875rem" }}>
+                        <thead style={{ position: "sticky", top: 0, zIndex: 5 }}>
+                          <tr style={{ background: "#F1F5F9", borderBottom: "1.5px solid #CBD5E1", color: "#334155" }}>
+                            <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
+                              {lang === "mr" ? "पावती व दिनांक (Receipt & Date)" : "Receipt & Date"}
+                            </th>
+                            <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
+                              {lang === "mr" ? "देणगीदार तपशील (Donor Details)" : "Donor Details"}
+                            </th>
+                            <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
+                              {lang === "mr" ? "मोहीम / उद्देश (Cause / Campaign)" : "Cause / Campaign"}
+                            </th>
+                            <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
+                              {lang === "mr" ? "रक्कम (Amount)" : "Amount (₹)"}
+                            </th>
+                            <th style={{ padding: "0.85rem 1rem", fontWeight: 700 }}>
+                              {lang === "mr" ? "माध्यम व UTR (Method & UTR)" : "Method & UTR"}
+                            </th>
+                            <th style={{ padding: "0.85rem 1rem", fontWeight: 700, textAlign: "center" }}>
+                              {lang === "mr" ? "स्थिती (Status)" : "Status"}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredDonors.map((d, index) => {
+                            const isEven = index % 2 === 0;
+                            const causeTitle = lang === "mr"
+                              ? (d.campaignTitleMarathi || d.campaignTitleEnglish || "सर्वसाधारण समाजकार्य निधी")
+                              : (d.campaignTitleEnglish || "General Social Welfare Corpus");
 
-                          return (
-                            <tr
-                              key={d.id}
-                              style={{
-                                background: isEven ? "#FFFFFF" : "#F8FAFC",
-                                borderBottom: "1px solid #E2E8F0"
-                              }}
-                            >
-                              {/* Receipt & Date */}
-                              <td style={{ padding: "0.85rem 1rem" }}>
-                                <div style={{ fontWeight: 800, color: "var(--primary-gold-dark)", fontFamily: "monospace", fontSize: "0.85rem" }}>
-                                  {d.receiptNumber || "N/A"}
-                                </div>
-                                <div style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "0.15rem" }}>
-                                  {new Date(d.donatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                                </div>
-                              </td>
+                            return (
+                              <tr
+                                key={d.id}
+                                style={{
+                                  background: isEven ? "#FFFFFF" : "#F8FAFC",
+                                  borderBottom: "1px solid #E2E8F0"
+                                }}
+                              >
+                                {/* Receipt & Date */}
+                                <td style={{ padding: "0.85rem 1rem" }}>
+                                  <div style={{ fontWeight: 800, color: "var(--primary-gold-dark)", fontFamily: "monospace", fontSize: "0.85rem" }}>
+                                    {d.receiptNumber || "N/A"}
+                                  </div>
+                                  <div style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "0.15rem" }}>
+                                    {new Date(d.donatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                                  </div>
+                                </td>
 
-                              {/* Donor Details */}
-                              <td style={{ padding: "0.85rem 1rem" }}>
-                                <div style={{ fontWeight: 700, color: "#0F172A", fontSize: "0.925rem" }}>
+                                {/* Donor Details */}
+                                <td style={{ padding: "0.85rem 1rem" }}>
+                                  <div style={{ fontWeight: 700, color: "#0F172A", fontSize: "0.925rem" }}>
+                                    {d.donorName}
+                                    {d.isAnonymous && (
+                                      <span style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginLeft: "0.35rem" }}>
+                                        ({lang === "mr" ? "गुप्त देणगी" : "Anonymous"})
+                                      </span>
+                                    )}
+                                  </div>
+                                  <div style={{ fontSize: "0.775rem", color: "#64748B" }}>
+                                    {d.city || (lang === "mr" ? "महाराष्ट्र" : "Maharashtra")}
+                                  </div>
+                                </td>
+
+                                {/* Cause / Campaign */}
+                                <td style={{ padding: "0.85rem 1rem", maxWidth: "240px" }}>
+                                  <div style={{ color: "#1E293B", fontWeight: 600, lineHeight: 1.4 }}>
+                                    {causeTitle}
+                                  </div>
+                                </td>
+
+                                {/* Amount */}
+                                <td style={{ padding: "0.85rem 1rem" }}>
+                                  <div style={{ fontSize: "1.05rem", fontWeight: 900, color: "var(--primary-gold-dark)" }}>
+                                    ₹{Number(d.amount || 0).toLocaleString("en-IN")}
+                                  </div>
+                                </td>
+
+                                {/* Method & UTR */}
+                                <td style={{ padding: "0.85rem 1rem" }}>
+                                  <div style={{ fontWeight: 600, color: "#334155" }}>
+                                    {d.paymentMethod || "UPI"}
+                                  </div>
+                                  {d.utrNumber && (
+                                    <div style={{ fontSize: "0.75rem", color: "#64748B", fontFamily: "monospace", marginTop: "0.1rem" }}>
+                                      UTR: {d.utrNumber}
+                                    </div>
+                                  )}
+                                </td>
+
+                                {/* Status */}
+                                <td style={{ padding: "0.85rem 1rem", textAlign: "center" }}>
+                                  <span className={`badge ${
+                                    d.paymentStatus === "Approved" ? "badge-tree" : d.paymentStatus === "Pending" ? "badge-gold" : "badge-blood"
+                                  }`} style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", padding: "0.3rem 0.65rem", fontSize: "0.75rem" }}>
+                                    {d.paymentStatus === "Approved" && <CheckCircle2 size={12} />}
+                                    {d.paymentStatus === "Pending" && <Clock size={12} />}
+                                    {d.paymentStatus === "Rejected" && <XCircle size={12} />}
+                                    <span>
+                                      {d.paymentStatus === "Approved"
+                                        ? (lang === "mr" ? "मान्यताप्राप्त" : "Approved")
+                                        : d.paymentStatus === "Pending"
+                                        ? (lang === "mr" ? "पडताळणी सुरू" : "Pending")
+                                        : (lang === "mr" ? "नाकारलेले" : "Rejected")}
+                                    </span>
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Mobile Card View (< 768px, optimized for 412x924) */}
+                    <div className="donor-ledger-mobile-cards">
+                      {filteredDonors.map((d) => {
+                        const causeTitle = lang === "mr"
+                          ? (d.campaignTitleMarathi || d.campaignTitleEnglish || "सर्वसाधारण समाजकार्य निधी")
+                          : (d.campaignTitleEnglish || "General Social Welfare Corpus");
+
+                        return (
+                          <div
+                            key={d.id}
+                            style={{
+                              background: "#F8FAFC",
+                              border: "1.5px solid #E2E8F0",
+                              borderRadius: "var(--radius-lg)",
+                              padding: "0.95rem",
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "0.55rem"
+                            }}
+                          >
+                            {/* Donor Name & Amount */}
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "0.5rem" }}>
+                              <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: 800, color: "#0F172A", fontSize: "0.975rem", lineHeight: 1.3 }}>
                                   {d.donorName}
                                   {d.isAnonymous && (
                                     <span style={{ fontSize: "0.75rem", color: "#64748B", fontWeight: 500, marginLeft: "0.35rem" }}>
@@ -632,60 +703,73 @@ export const DonatePage = () => {
                                     </span>
                                   )}
                                 </div>
-                                <div style={{ fontSize: "0.775rem", color: "#64748B" }}>
-                                  {d.city || (lang === "mr" ? "महाराष्ट्र" : "Maharashtra")}
+                                <div style={{ fontSize: "0.75rem", color: "#64748B", marginTop: "0.15rem" }}>
+                                  {d.city || (lang === "mr" ? "महाराष्ट्र" : "Maharashtra")} • {new Date(d.donatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                                 </div>
-                              </td>
+                              </div>
+                              <div style={{ fontSize: "1.15rem", fontWeight: 900, color: "var(--primary-gold-dark)", whiteSpace: "nowrap" }}>
+                                ₹{Number(d.amount || 0).toLocaleString("en-IN")}
+                              </div>
+                            </div>
 
-                              {/* Cause / Campaign */}
-                              <td style={{ padding: "0.85rem 1rem", maxWidth: "240px" }}>
-                                <div style={{ color: "#1E293B", fontWeight: 600, lineHeight: 1.4 }}>
-                                  {causeTitle}
-                                </div>
-                              </td>
+                            {/* Cause / Campaign */}
+                            <div style={{
+                              fontSize: "0.825rem",
+                              color: "#1E293B",
+                              background: "#FFFFFF",
+                              padding: "0.45rem 0.65rem",
+                              borderRadius: "var(--radius-md)",
+                              border: "1px solid #E2E8F0",
+                              lineHeight: 1.35
+                            }}>
+                              <span style={{ color: "var(--primary-gold-dark)", fontWeight: 700, marginRight: "0.35rem" }}>
+                                {lang === "mr" ? "मोहीम:" : "Cause:"}
+                              </span>
+                              {causeTitle}
+                            </div>
 
-                              {/* Amount */}
-                              <td style={{ padding: "0.85rem 1rem" }}>
-                                <div style={{ fontSize: "1.05rem", fontWeight: 900, color: "var(--primary-gold-dark)" }}>
-                                  ₹{Number(d.amount || 0).toLocaleString("en-IN")}
-                                </div>
-                              </td>
-
-                              {/* Method & UTR */}
-                              <td style={{ padding: "0.85rem 1rem" }}>
-                                <div style={{ fontWeight: 600, color: "#334155" }}>
-                                  {d.paymentMethod || "UPI"}
-                                </div>
-                                {d.utrNumber && (
-                                  <div style={{ fontSize: "0.75rem", color: "#64748B", fontFamily: "monospace", marginTop: "0.1rem" }}>
-                                    UTR: {d.utrNumber}
-                                  </div>
-                                )}
-                              </td>
-
-                              {/* Status */}
-                              <td style={{ padding: "0.85rem 1rem", textAlign: "center" }}>
-                                <span className={`badge ${
-                                  d.paymentStatus === "Approved" ? "badge-tree" : d.paymentStatus === "Pending" ? "badge-gold" : "badge-blood"
-                                }`} style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", padding: "0.3rem 0.65rem", fontSize: "0.75rem" }}>
-                                  {d.paymentStatus === "Approved" && <CheckCircle2 size={12} />}
-                                  {d.paymentStatus === "Pending" && <Clock size={12} />}
-                                  {d.paymentStatus === "Rejected" && <XCircle size={12} />}
-                                  <span>
-                                    {d.paymentStatus === "Approved"
-                                      ? (lang === "mr" ? "मान्यताप्राप्त" : "Approved")
-                                      : d.paymentStatus === "Pending"
-                                      ? (lang === "mr" ? "पडताळणी सुरू" : "Pending")
-                                      : (lang === "mr" ? "नाकारलेले" : "Rejected")}
-                                  </span>
+                            {/* Receipt, UTR and Status */}
+                            <div style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              flexWrap: "wrap",
+                              gap: "0.4rem",
+                              paddingTop: "0.4rem",
+                              borderTop: "1px dashed #CBD5E1",
+                              fontSize: "0.75rem"
+                            }}>
+                              <div style={{ color: "#64748B", display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap" }}>
+                                <span style={{ fontFamily: "monospace", fontWeight: 700, color: "var(--primary-gold-dark)" }}>
+                                  {d.receiptNumber || "N/A"}
                                 </span>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                                {d.utrNumber && (
+                                  <span style={{ fontFamily: "monospace", color: "#475569" }}>
+                                    UTR: {d.utrNumber}
+                                  </span>
+                                )}
+                              </div>
+
+                              <span className={`badge ${
+                                d.paymentStatus === "Approved" ? "badge-tree" : d.paymentStatus === "Pending" ? "badge-gold" : "badge-blood"
+                              }`} style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", padding: "0.25rem 0.55rem", fontSize: "0.725rem" }}>
+                                {d.paymentStatus === "Approved" && <CheckCircle2 size={11} />}
+                                {d.paymentStatus === "Pending" && <Clock size={11} />}
+                                {d.paymentStatus === "Rejected" && <XCircle size={11} />}
+                                <span>
+                                  {d.paymentStatus === "Approved"
+                                    ? (lang === "mr" ? "मान्यताप्राप्त" : "Approved")
+                                    : d.paymentStatus === "Pending"
+                                    ? (lang === "mr" ? "पडताळणी सुरू" : "Pending")
+                                    : (lang === "mr" ? "नाकारलेले" : "Rejected")}
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
                 )}
               </div>
             );
