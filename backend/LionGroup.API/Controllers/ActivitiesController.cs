@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LionGroup.API.DTOs.Activities;
 using LionGroup.API.Interfaces;
@@ -40,8 +41,9 @@ public class ActivitiesController : ControllerBase
         return Ok(activity);
     }
 
-    // Admin CRUD Endpoints
+    // Admin CRUD Endpoints (Protected by JWT)
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateActivity([FromBody] CreateActivityDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -50,6 +52,7 @@ public class ActivitiesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> UpdateActivity(int id, [FromBody] UpdateActivityDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -59,6 +62,7 @@ public class ActivitiesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteActivity(int id)
     {
         var deleted = await _activityService.DeleteActivityAsync(id);

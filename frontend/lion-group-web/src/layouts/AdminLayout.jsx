@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { AdminSidebar } from "../components/admin/AdminSidebar";
 import { AdminNavbar } from "../components/admin/AdminNavbar";
+import { authService } from "../services/authService";
 import { Lock, KeyRound, ArrowRight, ShieldCheck, Eye, EyeOff } from "lucide-react";
 
 export const AdminLayout = () => {
@@ -10,10 +11,12 @@ export const AdminLayout = () => {
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const authStatus = sessionStorage.getItem("lion_admin_auth");
-    if (authStatus === "true") {
+    const token = sessionStorage.getItem("lion_admin_token");
+    if (authStatus === "true" && token) {
       setIsAuthenticated(true);
     }
   }, []);
@@ -30,20 +33,28 @@ export const AdminLayout = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (passwordInput.trim() === "1221") {
-      sessionStorage.setItem("lion_admin_auth", "true");
-      setIsAuthenticated(true);
+    if (!passwordInput.trim()) {
+      setErrorMsg("Please enter password (कृपया पासवर्ड प्रविष्ट करा).");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
       setErrorMsg("");
+      await authService.login("admin", passwordInput.trim());
+      setIsAuthenticated(true);
       setPasswordInput("");
-    } else {
-      setErrorMsg("Incorrect Password (चुकाचा पासवर्ड).");
+    } catch (err) {
+      setErrorMsg(err.message || "Incorrect Password (चुकाचा पासवर्ड).");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("lion_admin_auth");
+    authService.logout();
     setIsAuthenticated(false);
     setPasswordInput("");
   };
@@ -161,10 +172,11 @@ export const AdminLayout = () => {
 
             <button
               type="submit"
+              disabled={isSubmitting}
               className="btn btn-gold"
-              style={{ width: "100%", padding: "0.8rem", fontSize: "0.95rem", justifyContent: "center" }}
+              style={{ width: "100%", padding: "0.8rem", fontSize: "0.95rem", justifyContent: "center", opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? "not-allowed" : "pointer" }}
             >
-              <span>Unlock Admin Portal</span>
+              <span>{isSubmitting ? "Verifying Token..." : "Unlock Admin Portal"}</span>
               <ArrowRight size={16} />
             </button>
           </form>

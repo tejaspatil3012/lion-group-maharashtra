@@ -18,7 +18,6 @@ public class CreateMemberDto
     [MaxLength(20)]
     public string? MobileNumber { get; set; }
 
-    [EmailAddress]
     [MaxLength(150)]
     public string? Email { get; set; }
 

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LionGroup.API.DTOs.Members;
 using LionGroup.API.Interfaces;
@@ -47,8 +48,9 @@ public class MembersController : ControllerBase
         return Ok(member);
     }
 
-    // Admin CRUD Endpoints
+    // Admin CRUD Endpoints (Protected by JWT)
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateMember([FromBody] CreateMemberDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -57,6 +59,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> UpdateMember(int id, [FromBody] UpdateMemberDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -66,6 +69,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteMember(int id)
     {
         var deleted = await _memberService.DeleteMemberAsync(id);
@@ -74,6 +78,7 @@ public class MembersController : ControllerBase
     }
 
     [HttpPost("designations")]
+    [Authorize]
     public async Task<IActionResult> CreateDesignation([FromBody] CreateDesignationDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);

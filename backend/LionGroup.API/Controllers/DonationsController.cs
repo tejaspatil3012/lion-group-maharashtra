@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LionGroup.API.DTOs.Donations;
 using LionGroup.API.Interfaces;
@@ -71,6 +72,7 @@ public class DonationsController : ControllerBase
     }
 
     [HttpPost("admin/campaigns")]
+    [Authorize]
     public async Task<IActionResult> CreateCampaign([FromBody] CreateCampaignDto dto)
     {
         if (!ModelState.IsValid)
@@ -81,6 +83,7 @@ public class DonationsController : ControllerBase
     }
 
     [HttpPut("admin/campaigns/{id:int}")]
+    [Authorize]
     public async Task<IActionResult> UpdateCampaign(int id, [FromBody] CreateCampaignDto dto)
     {
         if (!ModelState.IsValid)
@@ -94,6 +97,7 @@ public class DonationsController : ControllerBase
     }
 
     [HttpDelete("admin/campaigns/{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteCampaign(int id)
     {
         var success = await _donationService.DeleteCampaignAsync(id);
@@ -111,6 +115,7 @@ public class DonationsController : ControllerBase
     }
 
     [HttpPost("admin/donations/{id:int}/verify")]
+    [Authorize]
     public async Task<IActionResult> VerifyDonation(int id, [FromBody] VerifyDonationDto dto)
     {
         if (!ModelState.IsValid)

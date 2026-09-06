@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LionGroup.API.DTOs.Events;
 using LionGroup.API.Interfaces;
@@ -18,15 +19,15 @@ public class EventsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetEvents(string? status, string? district)
     {
-        var events = await _eventService.GetEventsAsync(status, district);
-        return Ok(events);
+        var result = await _eventService.GetEventsAsync(status, district);
+        return Ok(result);
     }
 
     [HttpGet("upcoming")]
-    public async Task<IActionResult> GetUpcoming(int count = 3)
+    public async Task<IActionResult> GetUpcomingEvents(int count = 3)
     {
-        var upcoming = await _eventService.GetUpcomingEventsAsync(count);
-        return Ok(upcoming);
+        var events = await _eventService.GetUpcomingEventsAsync(count);
+        return Ok(events);
     }
 
     [HttpGet("{id:int}")]
@@ -40,8 +41,9 @@ public class EventsController : ControllerBase
         return Ok(ev);
     }
 
-    // Admin CRUD Endpoints
+    // Admin CRUD Endpoints (Protected by JWT)
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -50,6 +52,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> UpdateEvent(int id, [FromBody] UpdateEventDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -59,6 +62,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteEvent(int id)
     {
         var deleted = await _eventService.DeleteEventAsync(id);

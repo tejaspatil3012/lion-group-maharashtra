@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LionGroup.API.DTOs.Contact;
 using LionGroup.API.Interfaces;
@@ -39,6 +40,7 @@ public class ContactController : ControllerBase
     }
 
     [HttpDelete("inquiries/{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteInquiry(int id)
     {
         var deleted = await _contactService.DeleteInquiryAsync(id);

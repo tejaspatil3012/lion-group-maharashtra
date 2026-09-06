@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LionGroup.API.DTOs.About;
 using LionGroup.API.Interfaces;
@@ -22,8 +23,9 @@ public class AboutController : ControllerBase
         return Ok(data);
     }
 
-    // Admin Update Endpoint
+    // Admin Update Endpoint (Protected by JWT)
     [HttpPut]
+    [Authorize]
     public async Task<IActionResult> UpdateAbout([FromBody] UpdateAboutDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);

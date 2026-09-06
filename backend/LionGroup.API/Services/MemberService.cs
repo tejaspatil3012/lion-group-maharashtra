@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using LionGroup.API.Data;
 using LionGroup.API.DTOs.Members;
@@ -9,10 +10,12 @@ namespace LionGroup.API.Services;
 public class MemberService : IMemberService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public MemberService(ApplicationDbContext context)
+    public MemberService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<List<MemberDto>> GetAllMembersAsync(string? district = null, int? designationId = null, bool? isCoreLeader = null)
@@ -42,7 +45,7 @@ public class MemberService : IMemberService
             .ThenBy(m => m.FullNameEnglish)
             .ToListAsync();
 
-        return members.Select(MapToDto).ToList();
+        return _mapper.Map<List<MemberDto>>(members);
     }
 
     public async Task<MemberDto?> GetMemberByIdAsync(int id)
@@ -52,7 +55,7 @@ public class MemberService : IMemberService
             .AsNoTracking()
             .FirstOrDefaultAsync(m => m.Id == id);
 
-        return member == null ? null : MapToDto(member);
+        return member == null ? null : _mapper.Map<MemberDto>(member);
     }
 
     public async Task<List<MemberDto>> GetCoreLeadershipAsync()
@@ -65,7 +68,7 @@ public class MemberService : IMemberService
             .ThenBy(m => m.FullNameEnglish)
             .ToListAsync();
 
-        return leaders.Select(MapToDto).ToList();
+        return _mapper.Map<List<MemberDto>>(leaders);
     }
 
     public async Task<List<DesignationDto>> GetAllDesignationsAsync()
@@ -75,41 +78,19 @@ public class MemberService : IMemberService
             .OrderBy(d => d.DisplayOrder)
             .ToListAsync();
 
-        return designations.Select(d => new DesignationDto
-        {
-            Id = d.Id,
-            NameEnglish = d.NameEnglish,
-            NameMarathi = d.NameMarathi,
-            DisplayOrder = d.DisplayOrder,
-            IsCoreLeader = d.IsCoreLeader
-        }).ToList();
+        return _mapper.Map<List<DesignationDto>>(designations);
     }
 
     public async Task<MemberDto> CreateMemberAsync(CreateMemberDto dto)
     {
-        var member = new Member
-        {
-            FullNameEnglish = dto.FullNameEnglish.Trim(),
-            FullNameMarathi = dto.FullNameMarathi.Trim(),
-            DesignationId = dto.DesignationId,
-            MobileNumber = dto.MobileNumber?.Trim(),
-            Email = dto.Email?.Trim(),
-            District = dto.District.Trim(),
-            Taluka = dto.Taluka?.Trim(),
-            VillageOrCity = dto.VillageOrCity?.Trim(),
-            PhotoUrl = dto.PhotoUrl,
-            DisplayOrder = dto.DisplayOrder,
-            IsCoreLeader = dto.IsCoreLeader,
-            IsActive = dto.IsActive,
-            JoinedDate = dto.JoinedDate ?? DateTime.UtcNow
-        };
+        var member = _mapper.Map<Member>(dto);
 
         await _context.Members.AddAsync(member);
         await _context.SaveChangesAsync();
 
         // Load designation navigation property
         await _context.Entry(member).Reference(m => m.Designation).LoadAsync();
-        return MapToDto(member);
+        return _mapper.Map<MemberDto>(member);
     }
 
     public async Task<MemberDto?> UpdateMemberAsync(int id, UpdateMemberDto dto)
@@ -117,23 +98,12 @@ public class MemberService : IMemberService
         var member = await _context.Members.FindAsync(id);
         if (member == null) return null;
 
-        member.FullNameEnglish = dto.FullNameEnglish.Trim();
-        member.FullNameMarathi = dto.FullNameMarathi.Trim();
-        member.DesignationId = dto.DesignationId;
-        member.MobileNumber = dto.MobileNumber?.Trim();
-        member.Email = dto.Email?.Trim();
-        member.District = dto.District.Trim();
-        member.Taluka = dto.Taluka?.Trim();
-        member.VillageOrCity = dto.VillageOrCity?.Trim();
-        member.PhotoUrl = dto.PhotoUrl;
-        member.DisplayOrder = dto.DisplayOrder;
-        member.IsCoreLeader = dto.IsCoreLeader;
-        member.IsActive = dto.IsActive;
+        _mapper.Map(dto, member);
         if (dto.JoinedDate.HasValue) member.JoinedDate = dto.JoinedDate.Value;
 
         await _context.SaveChangesAsync();
         await _context.Entry(member).Reference(m => m.Designation).LoadAsync();
-        return MapToDto(member);
+        return _mapper.Map<MemberDto>(member);
     }
 
     public async Task<bool> DeleteMemberAsync(int id)
@@ -148,43 +118,11 @@ public class MemberService : IMemberService
 
     public async Task<DesignationDto> CreateDesignationAsync(CreateDesignationDto dto)
     {
-        var designation = new Designation
-        {
-            NameEnglish = dto.NameEnglish.Trim(),
-            NameMarathi = dto.NameMarathi.Trim(),
-            DisplayOrder = dto.DisplayOrder,
-            IsCoreLeader = dto.IsCoreLeader
-        };
+        var designation = _mapper.Map<Designation>(dto);
 
         await _context.Designations.AddAsync(designation);
         await _context.SaveChangesAsync();
 
-        return new DesignationDto
-        {
-            Id = designation.Id,
-            NameEnglish = designation.NameEnglish,
-            NameMarathi = designation.NameMarathi,
-            DisplayOrder = designation.DisplayOrder,
-            IsCoreLeader = designation.IsCoreLeader
-        };
+        return _mapper.Map<DesignationDto>(designation);
     }
-
-    private static MemberDto MapToDto(Member m) => new()
-    {
-        Id = m.Id,
-        FullNameEnglish = m.FullNameEnglish,
-        FullNameMarathi = m.FullNameMarathi,
-        DesignationId = m.DesignationId,
-        DesignationEnglish = m.Designation?.NameEnglish ?? string.Empty,
-        DesignationMarathi = m.Designation?.NameMarathi ?? string.Empty,
-        MobileNumber = m.MobileNumber,
-        Email = m.Email,
-        District = m.District,
-        Taluka = m.Taluka,
-        VillageOrCity = m.VillageOrCity,
-        PhotoUrl = m.PhotoUrl,
-        DisplayOrder = m.DisplayOrder,
-        IsCoreLeader = m.IsCoreLeader,
-        JoinedDate = m.JoinedDate
-    };
 }

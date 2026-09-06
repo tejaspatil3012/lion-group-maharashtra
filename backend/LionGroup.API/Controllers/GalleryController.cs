@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LionGroup.API.DTOs.Gallery;
 using LionGroup.API.Interfaces;
@@ -40,8 +41,9 @@ public class GalleryController : ControllerBase
         return Ok(images);
     }
 
-    // Admin CRUD Endpoints
+    // Admin CRUD Endpoints (Protected by JWT)
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> CreateAlbum([FromBody] CreateAlbumDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -50,6 +52,7 @@ public class GalleryController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> UpdateAlbum(int id, [FromBody] UpdateAlbumDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -59,6 +62,7 @@ public class GalleryController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteAlbum(int id)
     {
         var deleted = await _galleryService.DeleteAlbumAsync(id);
@@ -67,6 +71,7 @@ public class GalleryController : ControllerBase
     }
 
     [HttpPost("{id:int}/images")]
+    [Authorize]
     public async Task<IActionResult> AddImageToAlbum(int id, [FromBody] AddGalleryImageDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -76,6 +81,7 @@ public class GalleryController : ControllerBase
     }
 
     [HttpDelete("images/{imageId:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteImage(int imageId)
     {
         var deleted = await _galleryService.DeleteImageAsync(imageId);

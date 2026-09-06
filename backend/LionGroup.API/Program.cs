@@ -1,5 +1,11 @@
+using System.Text;
 using System.Text.Json.Serialization;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using LionGroup.API.Data;
 using LionGroup.API.Interfaces;
@@ -82,6 +88,31 @@ builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IMembershipApplicationService, MembershipApplicationService>();
 builder.Services.AddScoped<IDonationService, DonationService>();
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<LionGroup.API.Mappings.MappingProfile>());
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(e => e.Value?.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value!.Errors.Select(x => x.ErrorMessage).ToArray()
+            );
+
+        var firstError = errors.Values.FirstOrDefault()?.FirstOrDefault()
+            ?? "Validation failed. Please check your inputs.";
+
+        return new BadRequestObjectResult(new
+        {
+            message = firstError,
+            errors = errors
+        });
+    };
+});
 
 // 3. Configure Controllers & JSON serialization
 builder.Services.AddControllers()
@@ -92,7 +123,36 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 
-// 4. Configure Swagger / OpenAPI UI
+// 4. Configure JWT Authentication & Authorization
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "LionGroupMaharashtraSuperSecretKeyForAdminAuthJwtTokens2026!";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "LionGroup.API";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "LionGroup.Web";
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ValidateIssuer = true,
+        ValidIssuer = jwtIssuer,
+        ValidateAudience = true,
+        ValidAudience = jwtAudience,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+builder.Services.AddAuthorization();
+
+// 5. Configure Swagger / OpenAPI UI with JWT Bearer Support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -102,9 +162,27 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "RESTful APIs for Lion Group Maharashtra Rajya Public Informational Website and Member Portal"
     });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter JWT Bearer token format: Bearer <your-token>"
+    });
+
+    c.AddSecurityRequirement(_ => new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecuritySchemeReference("Bearer"),
+            new List<string>()
+        }
+    });
 });
 
-// 5. Configure CORS for React SPA (Localhost, Vercel, Netlify, Render)
+// 6. Configure CORS for React SPA (Localhost, Vercel, Netlify, Render)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
@@ -118,10 +196,10 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// 6. Global Exception Middleware
+// 7. Global Exception Middleware
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-// 7. Configure Swagger UI Pipeline
+// 8. Configure Swagger UI Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -136,6 +214,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowReactApp");
 app.UseStaticFiles();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

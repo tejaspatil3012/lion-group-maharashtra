@@ -16,7 +16,6 @@ public class CreateMembershipApplicationDto
     [MaxLength(20)]
     public string MobileNumber { get; set; } = string.Empty;
 
-    [EmailAddress]
     [MaxLength(150)]
     public string? Email { get; set; }
 

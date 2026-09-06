@@ -86,6 +86,14 @@ export const JoinPage = () => {
       setErrorMessage(lang === "mr" ? "कृपया मोबाईल नंबर प्रविष्ट करा." : "Please enter your mobile number.");
       return;
     }
+    if (!/^[0-9]{10}$/.test(formData.mobileNumber.trim())) {
+      setErrorMessage(lang === "mr" ? "कृपया अचूक १० अंकी मोबाईल नंबर प्रविष्ट करा." : "Mobile number must be exactly 10 digits.");
+      return;
+    }
+    if (formData.email && formData.email.trim() && !/^[^@\s]+@[^@\s]+$/.test(formData.email.trim())) {
+      setErrorMessage(lang === "mr" ? "कृपया अचूक ईमेल प्रविष्ट करा (उदा. tejas@liongroup)." : "Email must contain '@' and a domain or identifier (e.g. tejas@liongroup).");
+      return;
+    }
 
     if (!formData.district) {
       setErrorMessage(lang === "mr" ? "कृपया जिल्हा निवडा." : "Please select your district.");
@@ -315,7 +323,7 @@ export const JoinPage = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit}>
+            <form noValidate onSubmit={handleSubmit}>
               {/* Profile Photo Uploader */}
               <div style={{ marginBottom: "2rem", padding: "1.25rem", backgroundColor: "rgba(0, 0, 0, 0.25)", borderRadius: "12px", border: "1px dashed rgba(212, 175, 55, 0.3)" }}>
                 <label style={{ display: "block", color: "var(--primary-gold)", fontWeight: 700, fontSize: "0.95rem", marginBottom: "0.75rem" }}>

@@ -62,6 +62,17 @@ api.interceptors.request.use(
   (config) => {
     activeRequestsCount++;
 
+    // Attach JWT Authorization Bearer token if present
+    const token = localStorage.getItem("lion_admin_token") || sessionStorage.getItem("lion_admin_token");
+    if (token) {
+      config.headers = config.headers || {};
+      if (typeof config.headers.set === "function") {
+        config.headers.set("Authorization", `Bearer ${token}`);
+      } else {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+
     // Unique requestId
     const reqId = `${config.method || "get"}_${config.url}_${Date.now()}_${Math.random()}`;
     config._reqId = reqId;
@@ -177,13 +188,25 @@ api.interceptors.response.use(
       });
     }
 
+    let validationDetails = null;
+    if (error.response?.data?.errors && typeof error.response.data.errors === "object") {
+      const allErrors = Object.values(error.response.data.errors).flat();
+      if (allErrors.length > 0) {
+        validationDetails = allErrors.join(" ");
+      }
+    }
+
     const errorMsg =
       error.response?.data?.message ||
+      validationDetails ||
       (isTimeout
         ? "The server took too long to respond. It may still be waking up from sleep. Please try again."
         : error.message || "Unable to connect to the server. Please check your internet connection.");
 
-    return Promise.reject(new Error(errorMsg));
+    const err = new Error(errorMsg);
+    err.response = error.response;
+    err.data = error.response?.data;
+    return Promise.reject(err);
   }
 );
 

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LionGroup.API.DTOs.Membership;
 using LionGroup.API.Interfaces;
@@ -15,6 +16,7 @@ public class MembershipApplicationsController : ControllerBase
         _service = service;
     }
 
+    // Public Application Submission
     [HttpPost]
     public async Task<IActionResult> SubmitApplication([FromBody] CreateMembershipApplicationDto dto)
     {
@@ -23,6 +25,7 @@ public class MembershipApplicationsController : ControllerBase
         return CreatedAtAction(nameof(GetApplicationById), new { id = result.Id }, result);
     }
 
+    // Admin Review Endpoints
     [HttpGet]
     public async Task<IActionResult> GetAllApplications([FromQuery] string? status)
     {
@@ -39,6 +42,7 @@ public class MembershipApplicationsController : ControllerBase
     }
 
     [HttpPost("{id:int}/approve")]
+    [Authorize]
     public async Task<IActionResult> ApproveApplication(int id, [FromBody] ApproveApplicationDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -55,6 +59,7 @@ public class MembershipApplicationsController : ControllerBase
     }
 
     [HttpPost("{id:int}/reject")]
+    [Authorize]
     public async Task<IActionResult> RejectApplication(int id)
     {
         var success = await _service.RejectApplicationAsync(id);
@@ -63,6 +68,7 @@ public class MembershipApplicationsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteApplication(int id)
     {
         var deleted = await _service.DeleteApplicationAsync(id);

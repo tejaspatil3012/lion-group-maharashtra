@@ -20,11 +20,9 @@ public class CreateInquiryDto
     public string FullName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Mobile number is required")]
-    [Phone(ErrorMessage = "Invalid phone number")]
     [MaxLength(20)]
     public string MobileNumber { get; set; } = string.Empty;
 
-    [EmailAddress(ErrorMessage = "Invalid email format")]
     [MaxLength(150)]
     public string? Email { get; set; }
 

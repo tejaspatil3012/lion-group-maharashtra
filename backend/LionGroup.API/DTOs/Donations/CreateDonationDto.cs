@@ -15,7 +15,6 @@ public class CreateDonationDto
     public string DonorMobile { get; set; } = string.Empty;
 
     [MaxLength(150)]
-    [EmailAddress]
     public string? DonorEmail { get; set; }
 
     [MaxLength(20)]

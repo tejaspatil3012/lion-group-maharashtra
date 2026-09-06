@@ -103,6 +103,14 @@ export const DonatePage = () => {
       alert(lang === "mr" ? "कृपया सर्व आवश्यक माहिती आणि योग्य रक्कम भरा." : "Please fill in all required details and a valid amount.");
       return;
     }
+    if (!/^[0-9]{10}$/.test(donorMobile.trim())) {
+      alert(lang === "mr" ? "कृपया अचूक १० अंकी मोबाईल नंबर प्रविष्ट करा." : "Mobile number must be exactly 10 digits.");
+      return;
+    }
+    if (donorEmail && donorEmail.trim() && !/^[^@\s]+@[^@\s]+$/.test(donorEmail.trim())) {
+      alert(lang === "mr" ? "कृपया अचूक ईमेल प्रविष्ट करा (उदा. tejas@liongroup)." : "Email must contain '@' and a domain or identifier (e.g. tejas@liongroup).");
+      return;
+    }
     setStep(2);
   };
 
@@ -133,7 +141,7 @@ export const DonatePage = () => {
       setStep(3);
       loadData(); // refresh counts
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to submit donation. Please check details.");
+      alert(err.message || err.response?.data?.message || "Failed to submit donation. Please check details.");
     } finally {
       setSubmitting(false);
     }
@@ -863,7 +871,7 @@ export const DonatePage = () => {
 
               {/* STEP 1: Select Amount & Donor Information */}
               {step === 1 && (
-                <form onSubmit={handleProceedToPayment}>
+                <form noValidate onSubmit={handleProceedToPayment}>
                   {/* Amount Pills */}
                   <div style={{ marginBottom: "1.5rem" }}>
                     <label style={{ display: "block", fontSize: "0.875rem", fontWeight: 700, color: "#1E293B", marginBottom: "0.5rem" }}>

@@ -62,6 +62,14 @@ export const ContactPage = () => {
       setFormErrors([lang === "mr" ? "कृपया आपला मोबाईल नंबर प्रविष्ट करा." : "Please enter your mobile number."]);
       return;
     }
+    if (!/^[0-9]{10}$/.test(formData.mobileNumber.trim())) {
+      setFormErrors([lang === "mr" ? "कृपया अचूक १० अंकी मोबाईल नंबर प्रविष्ट करा." : "Mobile number must be exactly 10 digits."]);
+      return;
+    }
+    if (formData.email && formData.email.trim() && !/^[^@\s]+@[^@\s]+$/.test(formData.email.trim())) {
+      setFormErrors([lang === "mr" ? "कृपया अचूक ईमेल प्रविष्ट करा (उदा. tejas@liongroup)." : "Email must contain '@' and a domain or identifier (e.g. tejas@liongroup)."]);
+      return;
+    }
     if (!formData.subject.trim()) {
       setFormErrors([lang === "mr" ? "कृपया विषयाची नोंद करा." : "Please enter a subject."]);
       return;
@@ -314,7 +322,7 @@ export const ContactPage = () => {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit}>
+                <form noValidate onSubmit={handleSubmit}>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
                     <div className="form-group">
                       <label className="form-label">{t.contact.fullName} *</label>

@@ -122,6 +122,18 @@ export const AdminMembersPage = () => {
       setFormError("Please select a designation.");
       return;
     }
+    if (formData.mobileNumber && formData.mobileNumber.trim()) {
+      if (!/^[0-9]{10}$/.test(formData.mobileNumber.trim())) {
+        setFormError("Mobile number must be exactly 10 digits.");
+        return;
+      }
+    }
+    if (formData.email && formData.email.trim()) {
+      if (!/^[^@\s]+@[^@\s]+$/.test(formData.email.trim())) {
+        setFormError("Email must contain '@' and a domain or identifier (e.g. tejas@liongroup).");
+        return;
+      }
+    }
 
     try {
       setSaving(true);
@@ -389,7 +401,7 @@ export const AdminMembersPage = () => {
               </div>
             )}
 
-            <form onSubmit={handleSaveMember}>
+            <form noValidate onSubmit={handleSaveMember}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.25rem" }}>
                 <div>
                   <label className="admin-label">Full Name (English) *</label>
