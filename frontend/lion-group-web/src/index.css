@@ -537,22 +537,181 @@ textarea.input-field {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 1rem;
-  min-height: 300px;
+  padding: 3.5rem 1rem;
+  min-height: 280px;
+  text-align: center;
+}
+
+.loader-visual-wrapper {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .spinner {
-  width: 48px;
-  height: 48px;
+  position: absolute;
+  width: 52px;
+  height: 52px;
   border: 4px solid rgba(212, 175, 55, 0.2);
   border-left-color: var(--primary-gold);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
 }
 
+.spinner-center-icon {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spin-slow {
+  animation: spin 6s linear infinite;
+}
+
+.text-gold {
+  color: var(--primary-gold-dark, #B45309);
+}
+
+.loader-title {
+  margin-top: 1.25rem;
+  color: var(--text-main, #1E293B);
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.loader-wakeup-box {
+  max-width: 480px;
+  margin-top: 0.85rem;
+  padding: 1rem 1.25rem;
+  background: #FFFDF5;
+  border: 1px solid #FDE68A;
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.loader-wakeup-desc {
+  font-size: 0.875rem;
+  color: #92400E;
+  line-height: 1.45;
+  margin-bottom: 0.65rem;
+}
+
+.loader-retry-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #FEF3C7;
+  color: #92400E;
+  padding: 0.3rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid #FCD34D;
+  margin-bottom: 0.65rem;
+}
+
+.loader-indeterminate-bar {
+  width: 100%;
+  height: 4px;
+  background: #FEF3C7;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loader-indeterminate-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #F59E0B, var(--primary-gold, #D4AF37), #F59E0B);
+  width: 40%;
+  border-radius: 4px;
+  animation: indeterminateShift 1.5s infinite ease-in-out;
+}
+
+/* Error Message Card */
+.error-message-card {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  background-color: #FEF2F2;
+  border: 1.5px solid #FECACA;
+  border-radius: var(--radius-xl, 16px);
+  max-width: 520px;
+  margin: 2.5rem auto;
+  box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.06);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.error-icon-wrapper {
+  margin-bottom: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #FEE2E2;
+}
+
+.error-title {
+  color: #991B1B;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.error-description {
+  color: #7F1D1D;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.45;
+}
+
+.error-help-text {
+  font-size: 0.825rem;
+  color: #B91C1C;
+  background: #FEE2E2;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes indeterminateShift {
+  0% {
+    left: -40%;
+  }
+  50% {
+    left: 40%;
+    width: 60%;
+  }
+  100% {
+    left: 100%;
+    width: 30%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -642,4 +801,131 @@ textarea.input-field {
     display: none;
   }
 }
+
+/* =========================================================
+   SERVER WAKEUP BANNER STYLES (Render Cold Start Notification)
+========================================================= */
+.server-wakeup-banner {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  width: calc(100% - 2rem);
+  max-width: 580px;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
+  border-radius: 14px;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  color: #FFFFFF;
+  overflow: hidden;
+  animation: bannerSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.server-wakeup-banner.is-connected {
+  border-color: rgba(16, 185, 129, 0.6);
+  background: rgba(6, 78, 59, 0.92);
+}
+
+.server-wakeup-content {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 1rem;
+}
+
+.server-wakeup-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-waking {
+  color: var(--primary-gold, #F59E0B);
+  animation: pulseIcon 2s infinite ease-in-out;
+}
+
+.icon-retrying {
+  color: #FCD34D;
+}
+
+.icon-connected {
+  color: #34D399;
+}
+
+.server-wakeup-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.server-wakeup-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #FFFFFF;
+}
+
+.server-wakeup-subtitle {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.35;
+}
+
+.server-wakeup-attempt {
+  color: #FCD34D;
+  font-weight: 600;
+}
+
+.server-wakeup-progress-bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.server-wakeup-progress-indeterminate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 35%;
+  background: linear-gradient(90deg, #F59E0B, #FDE047, #F59E0B);
+  border-radius: 3px;
+  animation: indeterminateShift 1.4s infinite ease-in-out;
+}
+
+@keyframes bannerSlideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes pulseIcon {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+
 

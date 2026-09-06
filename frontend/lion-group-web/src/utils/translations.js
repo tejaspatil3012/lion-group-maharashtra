@@ -139,7 +139,15 @@ export const translations = {
       backToList: "मागे जा",
       loading: "माहिती लोड होत आहे...",
       noData: "माहिती उपलब्ध नाही.",
-      errorLoading: "माहिती आणताना त्रुटी उद्भवली. कृपया पुन्हा प्रयत्न करा."
+      errorLoading: "माहिती आणताना त्रुटी उद्भवली. कृपया पुन्हा प्रयत्न करा.",
+      serverWakingUp: "सर्व्हर सुरू होत आहे...",
+      serverWakingUpDesc: "विनामूल्य क्लाउड सर्व्हर सुरू होण्यास काही सेकंद लागू शकतात. कृपया थांबा, पेज रिफ्रेश करण्याची गरज नाही; माहिती आपोआप लोड होईल.",
+      retrying: "पुन्हा प्रयत्न करत आहोत...",
+      retryAttempt: "प्रयत्न",
+      of: "पैकी",
+      retryNow: "पुन्हा प्रयत्न करा",
+      serverConnected: "सर्व्हरशी संपर्क जोडला गेला!",
+      timeoutError: "सर्व्हर सुरू होण्यास अपेक्षेपेक्षा जास्त वेळ लागला. कृपया खालील बटनावर क्लिक करून पुन्हा प्रयत्न करा."
     }
   },
   en: {
@@ -282,7 +290,15 @@ export const translations = {
       backToList: "Back to List",
       loading: "Loading information...",
       noData: "No data available.",
-      errorLoading: "Failed to load content. Please try again later."
+      errorLoading: "Failed to load content. Please try again later.",
+      serverWakingUp: "Server is waking up...",
+      serverWakingUpDesc: "The cloud server takes 30-45 seconds to spin up from sleep after inactivity. Hang tight, no need to refresh — your page will load automatically.",
+      retrying: "Retrying connection...",
+      retryAttempt: "Attempt",
+      of: "of",
+      retryNow: "Try Again Now",
+      serverConnected: "Connected to server!",
+      timeoutError: "The server is taking longer than expected to wake up. Please click 'Try Again Now' below."
     }
   }
 };
