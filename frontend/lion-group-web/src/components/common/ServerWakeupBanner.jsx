@@ -34,20 +34,20 @@ export const ServerWakeupBanner = () => {
               ? (lang === "mr" ? "सर्व्हर जोडला गेला!" : "Server Connected!")
               : (lang === "mr" ? "सर्व्हर सुरू होत आहे..." : "Cloud Server is Waking Up...")}
           </span>
-          <span className="server-wakeup-subtitle">
-            {isConnected
-              ? (lang === "mr" ? "पेज लोड होत आहे..." : "Loading data...")
-              : (lang === "mr"
-                  ? "विनामूल्य क्लाउड सर्व्हर सुरू होत आहे. कृपया थांबा, पेज रिफ्रेश करण्याची गरज नाही."
-                  : "Render cloud backend is waking up from sleep. Hang tight, no refresh needed!")}
-            {isRetrying && retryAttempt > 0 && (
+          {isConnected && (
+            <span className="server-wakeup-subtitle">
+              {lang === "mr" ? "पेज लोड होत आहे..." : "Loading data..."}
+            </span>
+          )}
+          {!isConnected && isRetrying && retryAttempt > 0 && (
+            <span className="server-wakeup-subtitle">
               <span className="server-wakeup-attempt">
-                {" "}• {lang === "mr"
+                {lang === "mr"
                   ? `${t.common.retryAttempt || "प्रयत्न"} ${retryAttempt}/${maxRetries}`
                   : `${t.common.retryAttempt || "Attempt"} ${retryAttempt}/${maxRetries}`}
               </span>
-            )}
-          </span>
+            </span>
+          )}
         </div>
       </div>
 

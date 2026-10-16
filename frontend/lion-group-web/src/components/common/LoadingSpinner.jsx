@@ -37,13 +37,11 @@ export const LoadingSpinner = ({ message, subtitle }) => {
 
       {isWaking && (
         <div className="loader-wakeup-box">
-          <p className="loader-wakeup-desc">
-            {subtitle ||
-              t.common?.serverWakingUpDesc ||
-              (lang === "mr"
-                ? "विनामूल्य क्लाउड सर्व्हर सुरू होण्यास ३०-४५ सेकंद लागू शकतात. कृपया थांबा, पेज रिफ्रेश करण्याची गरज नाही; माहिती आपोआप लोड होईल."
-                : "The cloud server is waking up after inactivity. Hang tight, no refresh needed — data will load automatically.")}
-          </p>
+          {subtitle && (
+            <p className="loader-wakeup-desc">
+              {subtitle}
+            </p>
+          )}
 
           {isRetrying && retryAttempt > 0 && (
             <div className="loader-retry-pill">
@@ -93,14 +91,6 @@ export const ErrorMessage = ({ message, onRetry }) => {
       <p className="error-description">
         {message || t.common?.errorLoading}
       </p>
-
-      {isColdStartOrTimeout && (
-        <p className="error-help-text">
-          {lang === "mr"
-            ? "विनामूल्य क्लाउड सर्व्हर सुरू होत असताना थोडा विलंब होऊ शकतो. कृपया खालील बटनावर क्लिक करून पुन्हा प्रयत्न करा."
-            : "Cloud servers on free tier take a moment to wake up after a period of inactivity. Please try again below."}
-        </p>
-      )}
 
       {onRetry && (
         <div style={{ marginTop: "1.25rem" }}>
