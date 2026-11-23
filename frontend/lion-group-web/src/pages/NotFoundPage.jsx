@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../hooks/useLanguage";
 import { Home } from "lucide-react";
+import { SEO } from "../components/common/SEO";
 
 export const NotFoundPage = () => {
   const { lang, t } = useLanguage();
@@ -16,6 +17,10 @@ export const NotFoundPage = () => {
       textAlign: "center",
       padding: "4rem 1.5rem"
     }}>
+      <SEO
+        title={lang === "mr" ? "पृष्ठ सापडले नाही | लायन ग्रुप महाराष्ट्र राज्य" : "Page Not Found | Lion Group Maharashtra Rajya"}
+        noindex={true}
+      />
       <div style={{ fontSize: "5rem", marginBottom: "1rem" }}>🦁</div>
       <h1 style={{
         fontFamily: "var(--font-heading)",

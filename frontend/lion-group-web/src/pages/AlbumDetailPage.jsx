@@ -4,6 +4,7 @@ import { useLanguage } from "../hooks/useLanguage";
 import { galleryService } from "../services/galleryService";
 import { PageHeader } from "../components/common/PageHeader";
 import { LoadingSpinner, ErrorMessage } from "../components/common/LoadingSpinner";
+import { SEO } from "../components/common/SEO";
 import { ArrowLeft, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 
 export const AlbumDetailPage = () => {
@@ -66,6 +67,11 @@ export const AlbumDetailPage = () => {
 
   return (
     <div>
+      <SEO
+        title={`${title} | Lion Group Maharashtra Rajya`}
+        description={desc}
+        canonical={`https://liongroupmaharashtra.vercel.app/gallery/${id}`}
+      />
       <PageHeader
         badge={t.gallery.badge}
         title={title}

@@ -4,6 +4,7 @@ import { useLanguage } from "../hooks/useLanguage";
 import { activityService } from "../services/activityService";
 import { PageHeader } from "../components/common/PageHeader";
 import { LoadingSpinner, ErrorMessage } from "../components/common/LoadingSpinner";
+import { SEO } from "../components/common/SEO";
 import { Calendar, MapPin, Users, Heart, ArrowLeft, Share2 } from "lucide-react";
 
 export const ActivityDetailPage = () => {
@@ -46,6 +47,12 @@ export const ActivityDetailPage = () => {
 
   return (
     <div>
+      <SEO
+        title={`${title} | Lion Group Maharashtra Rajya`}
+        description={summary || description}
+        canonical={`https://liongroupmaharashtra.vercel.app/activities/${id}`}
+        image={activity.bannerImageUrl}
+      />
       <PageHeader
         badge={activity.category}
         title={title}

@@ -4,6 +4,7 @@ import { useLanguage } from "../hooks/useLanguage";
 import { eventService } from "../services/eventService";
 import { PageHeader } from "../components/common/PageHeader";
 import { LoadingSpinner, ErrorMessage } from "../components/common/LoadingSpinner";
+import { SEO } from "../components/common/SEO";
 import { Calendar, MapPin, Clock, Award, ArrowLeft } from "lucide-react";
 
 export const EventDetailPage = () => {
@@ -47,6 +48,12 @@ export const EventDetailPage = () => {
 
   return (
     <div>
+      <SEO
+        title={`${title} | Lion Group Maharashtra Rajya`}
+        description={description}
+        canonical={`https://liongroupmaharashtra.vercel.app/events/${id}`}
+        image={event.bannerImageUrl}
+      />
       <PageHeader
         badge={event.status}
         title={title}
